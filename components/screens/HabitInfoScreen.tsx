@@ -6,12 +6,12 @@ import {
   Text,
   useStyleSheet,
 } from "@ui-kitten/components";
-import TopNavigationBack from "./TopNabigationBack";
+import TopNavigationBack from "../components/TopNabigationBack";
 import { SafeAreaView, View } from "react-native";
-import { HABITS } from "../constants/habits.constant";
-import HabitScheduleSwitcher from "./HabitScheduleSwitcher";
+import { HABITS } from "../../constants/habits.constant";
+import HabitScheduleSwitcher from "../components/HabitScheduleSwitcher";
 import { useRoute } from "@react-navigation/native";
-import { THabitInfoScreenRouteProp, TimeOfDayEnum } from "../types/types";
+import { THabitInfoScreenRouteProp, TimeOfDayEnum } from "../../types/types";
 
 const themedStyles = StyleService.create({
   layout: {

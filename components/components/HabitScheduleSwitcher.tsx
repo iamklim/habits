@@ -2,15 +2,15 @@ import React from "react";
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components";
 import { TouchableOpacity, View } from "react-native";
 import {
-  toggleHabitInWeekDay,
   notificationTimeSelector,
+  toggleHabitInWeekDay,
   weekdaysWithHabitSelector,
-} from "../store/scheduleSlice";
-import { TimeOfDayEnum, WeekDayEnum } from "../types/types";
-import { WEEK_DAYS } from "../constants/habits.constant";
-import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
+} from "../../store/scheduleSlice";
+import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
+import { WEEK_DAYS } from "../../constants/habits.constant";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 
-const themedStyles = StyleService.create({
+export const themedStyles = StyleService.create({
   container: {
     display: "flex",
     flexDirection: "row",
@@ -67,7 +67,11 @@ interface IWeekDayButtonProps {
   onPress: ({ weekDay }: { weekDay: WeekDayEnum }) => void;
 }
 
-const WeekDayButton = ({ weekDay, isActive, onPress }: IWeekDayButtonProps) => {
+export const WeekDayButton = ({
+  weekDay,
+  isActive,
+  onPress,
+}: IWeekDayButtonProps) => {
   const styles = useStyleSheet(themedStyles);
   const weekDayCamelCased =
     weekDay.charAt(0).toUpperCase() + weekDay.slice(1).toLowerCase();

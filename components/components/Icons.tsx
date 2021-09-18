@@ -1,5 +1,5 @@
-import { Icon } from "@ui-kitten/components";
 import React from "react";
+import { Icon } from "@ui-kitten/components";
 import { IconProps } from "@ui-kitten/components/ui/icon/icon.component";
 
 export const BellIcon = (props: IconProps) => (

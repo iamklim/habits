@@ -7,11 +7,11 @@ import {
 } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BottomNavigation, BottomNavigationTab } from "@ui-kitten/components";
-import TodayScreen from "./TodayScreen";
-import HabitsScreen from "./HabitsScreen";
-import RitualsScreen from "./RitualsScreen";
-import HabitInfoScreen from "./HabitInfoScreen";
-import { BellIcon } from "./Icons";
+import TodayScreen from "./screens/TodayScreen";
+import HabitsScreen from "./screens/HabitsScreen";
+import RitualsScreen from "./screens/RitualsScreen";
+import HabitInfoScreen from "./screens/HabitInfoScreen";
+import { BellIcon } from "./components/Icons";
 import { createStackNavigator } from "@react-navigation/stack";
 import { BottomTabNavigationEventMap } from "@react-navigation/bottom-tabs/src/types";
 import { ScreenEnum } from "../types/types";
@@ -46,7 +46,10 @@ const Habits = () => (
 
 export const AppNavigator = () => (
   <NavigationContainer>
-    <Tab.Navigator tabBar={(props) => <BottomTabBar {...props} />}>
+    <Tab.Navigator
+      screenOptions={{ headerShown: false }}
+      tabBar={(props) => <BottomTabBar {...props} />}
+    >
       <Tab.Screen name="Today" component={TodayScreen} />
       <Tab.Screen name="Rituals" component={RitualsScreen} />
       <Tab.Screen name="Habits" component={Habits} />

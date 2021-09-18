@@ -6,17 +6,17 @@ import {
   StyleService,
   useStyleSheet,
 } from "@ui-kitten/components";
-import HabitCard from "./HabitCard";
-import { HABITS } from "../constants/habits.constant";
-import { addHabit } from "../store/scheduleSlice";
+import HabitCard from "../components/HabitCard";
+import { HABITS } from "../../constants/habits.constant";
+import { addHabit } from "../../store/scheduleSlice";
 import { useNavigation } from "@react-navigation/native";
-import { removeHabit } from "../store/scheduleThunks";
+import { removeHabit } from "../../store/scheduleThunks";
 import {
   IHabit,
   ScreenEnum,
   THabitsScreenNavigationProp,
-} from "../types/types";
-import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
+} from "../../types/types";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 
 const themedStyles = StyleService.create({
   layout: {
