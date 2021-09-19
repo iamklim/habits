@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TimeOfDayEnum, WeekDayEnum } from "../types/types";
-import { RootState } from "./store";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {TimeOfDayEnum, WeekDayEnum} from "../types/types";
+import {RootState} from "./store";
 
 type THabitRecord = Record<WeekDayEnum, number[]>;
 
@@ -45,7 +45,6 @@ export const scheduleSlice = createSlice({
     addHabit: (state, action) => {
       state.habitsAdded = [...state.habitsAdded, action.payload.id];
     },
-
     removeHabitFromTimeOfDay: (
       state: IScheduleState,
       action: PayloadAction<{ id: number; timeOfDay: TimeOfDayEnum }>
@@ -92,6 +91,16 @@ export const scheduleSlice = createSlice({
         );
       }
     },
+    setNotificationTime: (
+      state,
+      action: PayloadAction<{
+        timeOfDay: TimeOfDayEnum;
+        notificationTime: string;
+      }>
+    ) => {
+      const timeOfDay = action.payload.timeOfDay;
+      state[timeOfDay].notificationTime = action.payload.notificationTime;
+    },
   },
 });
 
@@ -100,6 +109,7 @@ export const {
   removeHabitFromHabitsAdded,
   toggleHabitInWeekDay,
   removeHabitFromTimeOfDay,
+  setNotificationTime,
 } = scheduleSlice.actions;
 
 export const notificationTimeSelector = ({
@@ -132,5 +142,15 @@ export const weekdaysWithHabitSelector = ({
 
   return weekdaysWithHabit;
 };
+
+export const habitsByTimeOfDayAndWeekDaySelector = ({
+  state,
+  timeOfDay,
+  weekDay,
+}: {
+  state: RootState;
+  timeOfDay: TimeOfDayEnum;
+  weekDay: WeekDayEnum;
+}) => state.schedule[timeOfDay].habits[weekDay];
 
 export default scheduleSlice.reducer;

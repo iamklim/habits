@@ -1,14 +1,10 @@
 import React from "react";
-import { StyleService, Text, useStyleSheet } from "@ui-kitten/components";
-import { TouchableOpacity, View } from "react-native";
-import {
-  notificationTimeSelector,
-  toggleHabitInWeekDay,
-  weekdaysWithHabitSelector,
-} from "../../store/scheduleSlice";
-import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
-import { WEEK_DAYS } from "../../constants/habits.constant";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
+import {StyleService, Text, useStyleSheet} from "@ui-kitten/components";
+import {TouchableOpacity, View} from "react-native";
+import {notificationTimeSelector, toggleHabitInWeekDay, weekdaysWithHabitSelector,} from "../../store/scheduleSlice";
+import {TimeOfDayEnum, WeekDayEnum} from "../../types/types";
+import {WEEK_DAYS} from "../../constants/habits.constant";
+import {useAppDispatch, useAppSelector} from "../../hooks/redux-hooks";
 
 export const themedStyles = StyleService.create({
   container: {
@@ -23,10 +19,10 @@ export const themedStyles = StyleService.create({
     borderRadius: 10,
   },
   notificationTime: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
     color: "color-primary-800",
-    marginRight: 6,
+    marginRight: 4,
   },
   weekDays: {
     display: "flex",
@@ -111,6 +107,9 @@ const HabitScheduleSwitcher = ({
   const notificationTime = useAppSelector((state) =>
     notificationTimeSelector({ state, timeOfDay })
   );
+  const notificationTimeParsed = Boolean(notificationTime?.length)
+    ? new Date(notificationTime)
+    : null;
 
   const activeWeekDays = useAppSelector((state) =>
     weekdaysWithHabitSelector({ state, timeOfDay, habitId })
@@ -122,7 +121,14 @@ const HabitScheduleSwitcher = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.notificationTime}>{notificationTime ?? "--:--"}</Text>
+      <Text style={styles.notificationTime}>
+        {notificationTimeParsed
+          ? notificationTimeParsed.toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : "--:--"}
+      </Text>
       <View style={styles.weekDays}>
         {WEEK_DAYS.map((weekDay, index) => {
           const isActive = activeWeekDays.includes(weekDay);

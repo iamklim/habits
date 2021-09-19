@@ -1,17 +1,11 @@
 import React from "react";
-import {
-  Icon,
-  Layout,
-  StyleService,
-  Text,
-  useStyleSheet,
-} from "@ui-kitten/components";
+import {Icon, Layout, StyleService, Text, useStyleSheet,} from "@ui-kitten/components";
 import TopNavigationBack from "../components/TopNabigationBack";
-import { SafeAreaView, View } from "react-native";
-import { HABITS } from "../../constants/habits.constant";
+import {SafeAreaView, ScrollView, View} from "react-native";
+import {HABITS} from "../../constants/habits.constant";
 import HabitScheduleSwitcher from "../components/HabitScheduleSwitcher";
-import { useRoute } from "@react-navigation/native";
-import { THabitInfoScreenRouteProp, TimeOfDayEnum } from "../../types/types";
+import {useRoute} from "@react-navigation/native";
+import {THabitInfoScreenRouteProp, TimeOfDayEnum} from "../../types/types";
 
 const themedStyles = StyleService.create({
   layout: {
@@ -67,37 +61,39 @@ const HabitInfoScreen = () => {
   return (
     <Layout style={styles.layout}>
       <SafeAreaView style={styles.safeAreaView}>
-        <TopNavigationBack />
-        {currentHabit && (
-          <View style={styles.container}>
-            <View style={styles.title}>
-              <Icon style={styles.icon} name={currentHabit.icon} />
-              <Text style={styles.titleText}>{currentHabit.name}</Text>
+        <TopNavigationBack title="Habits" />
+        <ScrollView>
+          {currentHabit && (
+            <View style={styles.container}>
+              <View style={styles.title}>
+                <Icon style={styles.icon} name={currentHabit.icon} />
+                <Text style={styles.titleText}>{currentHabit.name}</Text>
+              </View>
+              <Text style={styles.description}>{currentHabit.description}</Text>
+              <Text style={styles.ritualTitle}>Morning ritual</Text>
+              <View style={styles.ritualSchedule}>
+                <HabitScheduleSwitcher
+                  timeOfDay={TimeOfDayEnum.MORNING}
+                  habitId={habitId}
+                />
+              </View>
+              <Text style={styles.ritualTitle}>Afternoon ritual</Text>
+              <View style={styles.ritualSchedule}>
+                <HabitScheduleSwitcher
+                  timeOfDay={TimeOfDayEnum.AFTERNOON}
+                  habitId={habitId}
+                />
+              </View>
+              <Text style={styles.ritualTitle}>Evening ritual</Text>
+              <View style={styles.ritualSchedule}>
+                <HabitScheduleSwitcher
+                  timeOfDay={TimeOfDayEnum.EVENING}
+                  habitId={habitId}
+                />
+              </View>
             </View>
-            <Text style={styles.description}>{currentHabit.description}</Text>
-            <Text style={styles.ritualTitle}>Morning ritual</Text>
-            <View style={styles.ritualSchedule}>
-              <HabitScheduleSwitcher
-                timeOfDay={TimeOfDayEnum.MORNING}
-                habitId={habitId}
-              />
-            </View>
-            <Text style={styles.ritualTitle}>Afternoon ritual</Text>
-            <View style={styles.ritualSchedule}>
-              <HabitScheduleSwitcher
-                timeOfDay={TimeOfDayEnum.AFTERNOON}
-                habitId={habitId}
-              />
-            </View>
-            <Text style={styles.ritualTitle}>Evening ritual</Text>
-            <View style={styles.ritualSchedule}>
-              <HabitScheduleSwitcher
-                timeOfDay={TimeOfDayEnum.EVENING}
-                habitId={habitId}
-              />
-            </View>
-          </View>
-        )}
+          )}
+        </ScrollView>
       </SafeAreaView>
     </Layout>
   );

@@ -1,7 +1,7 @@
 import React from "react";
-import { TopNavigation, TopNavigationAction } from "@ui-kitten/components";
-import { BackIcon } from "./Icons";
-import { useNavigation } from "@react-navigation/native";
+import {TopNavigation, TopNavigationAction} from "@ui-kitten/components";
+import {ArrowLeftIcon} from "./Icons";
+import {useNavigation} from "@react-navigation/native";
 
 const BackAction = () => {
   const navigation = useNavigation();
@@ -9,11 +9,15 @@ const BackAction = () => {
     navigation.goBack();
   };
 
-  return <TopNavigationAction onPress={onPress} icon={BackIcon} />;
+  return <TopNavigationAction onPress={onPress} icon={ArrowLeftIcon} />;
 };
 
-const TopNavigationBack = () => (
-  <TopNavigation accessoryLeft={BackAction} title="Back" />
+interface ITopNavigationBackProps {
+  title?: string;
+}
+
+const TopNavigationBack = ({ title = "Back" }: ITopNavigationBackProps) => (
+  <TopNavigation accessoryLeft={BackAction} title={title} />
 );
 
 export default TopNavigationBack;

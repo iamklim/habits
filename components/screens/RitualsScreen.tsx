@@ -1,15 +1,9 @@
-import React, { useState } from "react";
-import {
-  Layout,
-  StyleService,
-  Text,
-  useStyleSheet,
-} from "@ui-kitten/components";
-import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
-import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
-import { WEEK_DAYS } from "../../constants/habits.constant";
-import { useAppSelector } from "../../hooks/redux-hooks";
-import { notificationTimeSelector } from "../../store/scheduleSlice";
+import React, {useState} from "react";
+import {Layout, StyleService, Text, useStyleSheet,} from "@ui-kitten/components";
+import {TimeOfDayEnum, WeekDayEnum} from "../../types/types";
+import {SafeAreaView, ScrollView, TouchableOpacity, View} from "react-native";
+import {WEEK_DAYS} from "../../constants/habits.constant";
+import RitualInfo from "../components/RitualInfo";
 
 const themedStyles = StyleService.create({
   layout: {
@@ -28,8 +22,8 @@ const themedStyles = StyleService.create({
     borderBottomWidth: 2,
   },
   content: {
-    paddingTop: 10,
-    paddingHorizontal: 10,
+    // paddingTop: 5,
+    paddingHorizontal: 20,
   },
   weekDays: {
     display: "flex",
@@ -62,22 +56,12 @@ const themedStyles = StyleService.create({
   buttonTextActive: {
     color: "color-basic-100",
   },
-  ritualTitle: {
-    fontWeight: "500",
-    fontSize: 18,
-    lineHeight: 21,
-    marginBottom: 10,
-  },
-  ritualNotification: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  ritualNotificationText: {
-    fontWeight: "500",
-    fontSize: 18,
-    lineHeight: 21,
-    marginBottom: 10,
+
+  ritualInfo: {
+    // marginBottom: 20,
+    borderBottomColor: "color-basic-transparent-100",
+    borderBottomWidth: 2,
+    paddingVertical: 15,
   },
 });
 
@@ -125,10 +109,6 @@ const RitualsScreen = () => {
     setCurrentWeekDay(weekDay);
   };
 
-  const notificationTime = useAppSelector((state) =>
-    notificationTimeSelector({ state, timeOfDay: TimeOfDayEnum.MORNING })
-  );
-
   return (
     <Layout style={styles.layout}>
       <SafeAreaView style={styles.safeAreaView}>
@@ -150,15 +130,24 @@ const RitualsScreen = () => {
         </View>
         <ScrollView>
           <View style={styles.content}>
-            <Text style={styles.ritualTitle}>Morning ritual</Text>
-            <View style={styles.ritualNotification}>
-              <Text style={styles.ritualNotificationText}>Notification: </Text>
-              <Text style={styles.ritualNotificationText}>
-                {notificationTime?.length ? notificationTime : "not set"}
-              </Text>
+            <View style={styles.ritualInfo}>
+              <RitualInfo
+                timeOfDay={TimeOfDayEnum.MORNING}
+                weekDay={currentWeekDay}
+              />
             </View>
-            <Text style={styles.ritualTitle}>Afternoon ritual</Text>
-            <Text style={styles.ritualTitle}>Evening ritual</Text>
+            <View style={styles.ritualInfo}>
+              <RitualInfo
+                timeOfDay={TimeOfDayEnum.AFTERNOON}
+                weekDay={currentWeekDay}
+              />
+            </View>
+            <View style={styles.ritualInfo}>
+              <RitualInfo
+                timeOfDay={TimeOfDayEnum.EVENING}
+                weekDay={currentWeekDay}
+              />
+            </View>
           </View>
         </ScrollView>
       </SafeAreaView>

@@ -1,22 +1,19 @@
-import React, { useState } from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
-import {
-  Button,
-  Layout,
-  StyleService,
-  useStyleSheet,
-} from "@ui-kitten/components";
+import React from "react";
+import {SafeAreaView, ScrollView, View} from "react-native";
+import {Button, Layout, StyleService, useStyleSheet,} from "@ui-kitten/components";
 import HabitCard from "../components/HabitCard";
-import { HABITS } from "../../constants/habits.constant";
-import { addHabit } from "../../store/scheduleSlice";
-import { useNavigation } from "@react-navigation/native";
-import { removeHabit } from "../../store/scheduleThunks";
+import {HABITS} from "../../constants/habits.constant";
+import {addHabit} from "../../store/scheduleSlice";
+import {useNavigation, useRoute} from "@react-navigation/native";
+import {removeHabit} from "../../store/scheduleThunks";
 import {
+  HabitsScreenTabEnum,
   IHabit,
-  ScreenEnum,
+  StackNavigatorScreensEnum,
+  THabitsListScreenRouteProp,
   THabitsScreenNavigationProp,
 } from "../../types/types";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
+import {useAppDispatch, useAppSelector} from "../../hooks/redux-hooks";
 
 const themedStyles = StyleService.create({
   layout: {
@@ -65,7 +62,7 @@ const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
   };
 
   const onHabitOpen = ({ id }: { id: number }) => {
-    navigation.navigate(ScreenEnum.HABIT_INFO, { id });
+    navigation.navigate(StackNavigatorScreensEnum.HABIT_INFO, { id });
   };
 
   return (
@@ -90,17 +87,13 @@ const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
   );
 };
 
-enum HabitsScreenTabEnum {
-  HABITS = "habits",
-  MY_HABITS = "myHabits",
-}
-
 const HabitsScreen = () => {
   const styles = useStyleSheet(themedStyles);
+  const navigation = useNavigation<THabitsScreenNavigationProp>();
+  const route = useRoute<THabitsListScreenRouteProp>();
+  const tab = route.params.tab;
 
   const habitsAdded = useAppSelector((state) => state.schedule.habitsAdded);
-
-  const [tab, setTab] = useState(HabitsScreenTabEnum.HABITS);
 
   const isHabitsTab = tab === HabitsScreenTabEnum.HABITS;
   const isMyHabitsTab = tab === HabitsScreenTabEnum.MY_HABITS;
@@ -114,11 +107,15 @@ const HabitsScreen = () => {
   );
 
   const onHabitsPress = () => {
-    setTab(HabitsScreenTabEnum.HABITS);
+    navigation.setParams({
+      tab: HabitsScreenTabEnum.HABITS,
+    });
   };
 
   const onMyHabitsPress = () => {
-    setTab(HabitsScreenTabEnum.MY_HABITS);
+    navigation.setParams({
+      tab: HabitsScreenTabEnum.MY_HABITS,
+    });
   };
 
   return (
