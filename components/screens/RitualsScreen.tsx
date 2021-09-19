@@ -1,8 +1,13 @@
-import React, {useState} from "react";
-import {Layout, StyleService, Text, useStyleSheet,} from "@ui-kitten/components";
-import {TimeOfDayEnum, WeekDayEnum} from "../../types/types";
-import {SafeAreaView, ScrollView, TouchableOpacity, View} from "react-native";
-import {WEEK_DAYS} from "../../constants/habits.constant";
+import React, { useState } from "react";
+import {
+  Layout,
+  StyleService,
+  Text,
+  useStyleSheet,
+} from "@ui-kitten/components";
+import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
+import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
+import { WEEK_DAYS } from "../../constants/habits.constant";
 import RitualInfo from "../components/RitualInfo";
 
 const themedStyles = StyleService.create({

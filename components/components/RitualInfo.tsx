@@ -1,16 +1,16 @@
 import React from "react";
-import {TouchableOpacity, View} from "react-native";
-import {StyleService, Text, useStyleSheet} from "@ui-kitten/components";
-import {TimeOfDayEnum, WeekDayEnum} from "../../types/types";
-import {useAppDispatch, useAppSelector} from "../../hooks/redux-hooks";
+import { TouchableOpacity, View } from "react-native";
+import { StyleService, Text, useStyleSheet } from "@ui-kitten/components";
+import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 import {
   habitsByTimeOfDayAndWeekDaySelector,
   notificationTimeSelector,
   setNotificationTime,
 } from "../../store/scheduleSlice";
-import DateTimePicker, {Event} from "@react-native-community/datetimepicker";
-import {MinusIcon, PlusIcon} from "./Icons";
-import {TIME_OF_DAY_TO_DEFAULT_NOTIFICATION_HOUR} from "../../constants/schedule.constants";
+import DateTimePicker, { Event } from "@react-native-community/datetimepicker";
+import { MinusIcon, PlusIcon } from "./Icons";
+import { TIME_OF_DAY_TO_DEFAULT_NOTIFICATION_HOUR } from "../../constants/schedule.constants";
 import RitualHabit from "./RitualHabit";
 import RitualEmptyTag from "./RitualEmptyTag";
 

@@ -1,7 +1,7 @@
-import {TouchableOpacity} from "react-native";
-import {Icon, StyleService, Text, useStyleSheet} from "@ui-kitten/components";
+import { TouchableOpacity } from "react-native";
+import { Icon, StyleService, Text, useStyleSheet } from "@ui-kitten/components";
 import React from "react";
-import {ChevronRightIcon} from "./Icons";
+import { ChevronRightIcon } from "./Icons";
 
 const themedStyles = StyleService.create({
   container: {

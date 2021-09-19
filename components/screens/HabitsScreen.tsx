@@ -1,11 +1,16 @@
 import React from "react";
-import {SafeAreaView, ScrollView, View} from "react-native";
-import {Button, Layout, StyleService, useStyleSheet,} from "@ui-kitten/components";
+import { SafeAreaView, ScrollView, View } from "react-native";
+import {
+  Button,
+  Layout,
+  StyleService,
+  useStyleSheet,
+} from "@ui-kitten/components";
 import HabitCard from "../components/HabitCard";
-import {HABITS} from "../../constants/habits.constant";
-import {addHabit} from "../../store/scheduleSlice";
-import {useNavigation, useRoute} from "@react-navigation/native";
-import {removeHabit} from "../../store/scheduleThunks";
+import { HABITS } from "../../constants/habits.constant";
+import { addHabit } from "../../store/scheduleSlice";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { removeHabit } from "../../store/scheduleThunks";
 import {
   HabitsScreenTabEnum,
   IHabit,
@@ -13,7 +18,7 @@ import {
   THabitsListScreenRouteProp,
   THabitsScreenNavigationProp,
 } from "../../types/types";
-import {useAppDispatch, useAppSelector} from "../../hooks/redux-hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 
 const themedStyles = StyleService.create({
   layout: {

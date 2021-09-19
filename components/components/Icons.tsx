@@ -1,6 +1,6 @@
 import React from "react";
-import {Icon} from "@ui-kitten/components";
-import {IconProps} from "@ui-kitten/components/ui/icon/icon.component";
+import { Icon } from "@ui-kitten/components";
+import { IconProps } from "@ui-kitten/components/ui/icon/icon.component";
 
 export const CalendarTodayIcon = (props: IconProps) => (
   <Icon {...props} name="calendar-today" />

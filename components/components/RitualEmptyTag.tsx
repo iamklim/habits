@@ -1,6 +1,6 @@
 import React from "react";
-import {WEEK_DAYS_SHORT_TO_FULL} from "../../constants/habits.constant";
-import {useNavigation} from "@react-navigation/native";
+import { WEEK_DAYS_SHORT_TO_FULL } from "../../constants/habits.constant";
+import { useNavigation } from "@react-navigation/native";
 import {
   HabitsScreenTabEnum,
   StackNavigatorScreensEnum,

@@ -1,11 +1,17 @@
 import React from "react";
-import {Icon, Layout, StyleService, Text, useStyleSheet,} from "@ui-kitten/components";
+import {
+  Icon,
+  Layout,
+  StyleService,
+  Text,
+  useStyleSheet,
+} from "@ui-kitten/components";
 import TopNavigationBack from "../components/TopNabigationBack";
-import {SafeAreaView, ScrollView, View} from "react-native";
-import {HABITS} from "../../constants/habits.constant";
+import { SafeAreaView, ScrollView, View } from "react-native";
+import { HABITS } from "../../constants/habits.constant";
 import HabitScheduleSwitcher from "../components/HabitScheduleSwitcher";
-import {useRoute} from "@react-navigation/native";
-import {THabitInfoScreenRouteProp, TimeOfDayEnum} from "../../types/types";
+import { useRoute } from "@react-navigation/native";
+import { THabitInfoScreenRouteProp, TimeOfDayEnum } from "../../types/types";
 
 const themedStyles = StyleService.create({
   layout: {

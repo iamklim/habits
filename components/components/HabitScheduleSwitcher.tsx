@@ -1,10 +1,14 @@
 import React from "react";
-import {StyleService, Text, useStyleSheet} from "@ui-kitten/components";
-import {TouchableOpacity, View} from "react-native";
-import {notificationTimeSelector, toggleHabitInWeekDay, weekdaysWithHabitSelector,} from "../../store/scheduleSlice";
-import {TimeOfDayEnum, WeekDayEnum} from "../../types/types";
-import {WEEK_DAYS} from "../../constants/habits.constant";
-import {useAppDispatch, useAppSelector} from "../../hooks/redux-hooks";
+import { StyleService, Text, useStyleSheet } from "@ui-kitten/components";
+import { TouchableOpacity, View } from "react-native";
+import {
+  notificationTimeSelector,
+  toggleHabitInWeekDay,
+  weekdaysWithHabitSelector,
+} from "../../store/scheduleSlice";
+import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
+import { WEEK_DAYS } from "../../constants/habits.constant";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 
 export const themedStyles = StyleService.create({
   container: {

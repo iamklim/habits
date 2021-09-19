@@ -1,7 +1,7 @@
 import React from "react";
-import {TopNavigation, TopNavigationAction} from "@ui-kitten/components";
-import {ArrowLeftIcon} from "./Icons";
-import {useNavigation} from "@react-navigation/native";
+import { TopNavigation, TopNavigationAction } from "@ui-kitten/components";
+import { ArrowLeftIcon } from "./Icons";
+import { useNavigation } from "@react-navigation/native";
 
 const BackAction = () => {
   const navigation = useNavigation();

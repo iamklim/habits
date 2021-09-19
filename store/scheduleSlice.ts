@@ -1,6 +1,6 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {TimeOfDayEnum, WeekDayEnum} from "../types/types";
-import {RootState} from "./store";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TimeOfDayEnum, WeekDayEnum } from "../types/types";
+import { RootState } from "./store";
 
 type THabitRecord = Record<WeekDayEnum, number[]>;
 

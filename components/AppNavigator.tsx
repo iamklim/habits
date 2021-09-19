@@ -1,22 +1,27 @@
 import React from "react";
-import {NavigationContainer, NavigationHelpers, ParamListBase, TabNavigationState,} from "@react-navigation/native";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import {BottomNavigation, BottomNavigationTab} from "@ui-kitten/components";
+import {
+  NavigationContainer,
+  NavigationHelpers,
+  ParamListBase,
+  TabNavigationState,
+} from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { BottomNavigation, BottomNavigationTab } from "@ui-kitten/components";
 import TodayScreen from "./screens/TodayScreen";
 import HabitsScreen from "./screens/HabitsScreen";
 import RitualsScreen from "./screens/RitualsScreen";
 import HabitInfoScreen from "./screens/HabitInfoScreen";
-import {BellIcon, CalendarTodayIcon, ListIcon} from "./components/Icons";
-import {createStackNavigator} from "@react-navigation/stack";
-import {BottomTabNavigationEventMap} from "@react-navigation/bottom-tabs/src/types";
+import { BellIcon, CalendarTodayIcon, ListIcon } from "./components/Icons";
+import { createStackNavigator } from "@react-navigation/stack";
+import { BottomTabNavigationEventMap } from "@react-navigation/bottom-tabs/src/types";
 import {
-    BottomTabNavigatorScreensEnum,
-    HabitsScreenTabEnum,
-    StackNavigatorScreensEnum,
-    TBottomTabNavigatorParams,
-    TStackNavigatorParams,
+  BottomTabNavigatorScreensEnum,
+  HabitsScreenTabEnum,
+  StackNavigatorScreensEnum,
+  TBottomTabNavigatorParams,
+  TStackNavigatorParams,
 } from "../types/types";
-import {SafeAreaView} from "react-native";
+import { SafeAreaView } from "react-native";
 
 const Stack = createStackNavigator<TStackNavigatorParams>();
 const Tab = createBottomTabNavigator<TBottomTabNavigatorParams>();

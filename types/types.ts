@@ -1,6 +1,6 @@
-import {RouteProp} from "@react-navigation/native";
-import {NativeStackNavigationProp} from "react-native-screens/native-stack";
-import {BottomTabNavigationProp} from "@react-navigation/bottom-tabs";
+import { RouteProp } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "react-native-screens/native-stack";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 
 export enum StackNavigatorScreensEnum {
   HABITS_LIST = "HabitsList",

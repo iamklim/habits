@@ -1,4 +1,4 @@
-import {IHabit, WeekDayEnum} from "../types/types";
+import { IHabit, WeekDayEnum } from "../types/types";
 
 export const WEEK_DAYS = [
   WeekDayEnum.MON,
