@@ -34,7 +34,6 @@ const themedStyles = StyleService.create({
   cardTitleText: {
     fontSize: 18,
     fontWeight: "500",
-    lineHeight: 18,
   },
   icon: {
     width: 24,
@@ -45,7 +44,6 @@ const themedStyles = StyleService.create({
   cardDescription: {
     fontSize: 14,
     fontWeight: "300",
-    lineHeight: 16,
   },
   cardFooter: {
     display: "flex",

@@ -8,9 +8,9 @@ import {
 } from "@ui-kitten/components";
 import HabitCard from "../components/HabitCard";
 import { HABITS } from "../../constants/habits.constant";
-import { addHabit } from "../../store/scheduleSlice";
+import { addHabit } from "../../store/schedule/scheduleSlice";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { removeHabit } from "../../store/scheduleThunks";
+import { removeHabit } from "../../store/schedule/scheduleThunks";
 import {
   HabitsScreenTabEnum,
   IHabit,

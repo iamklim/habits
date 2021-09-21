@@ -33,7 +33,6 @@ const themedStyles = StyleService.create({
   titleText: {
     fontSize: 18,
     fontWeight: "500",
-    lineHeight: 18,
   },
   icon: {
     width: 24,
@@ -44,13 +43,11 @@ const themedStyles = StyleService.create({
   description: {
     fontSize: 16,
     fontWeight: "300",
-    lineHeight: 18,
     marginBottom: 30,
   },
   ritualTitle: {
     fontWeight: "500",
     fontSize: 18,
-    lineHeight: 21,
     marginBottom: 10,
   },
   ritualSchedule: {

@@ -1,24 +1,4 @@
-import { IHabit, WeekDayEnum } from "../types/types";
-
-export const WEEK_DAYS = [
-  WeekDayEnum.MON,
-  WeekDayEnum.TUE,
-  WeekDayEnum.WED,
-  WeekDayEnum.THU,
-  WeekDayEnum.FRI,
-  WeekDayEnum.SAT,
-  WeekDayEnum.SUN,
-];
-
-export const WEEK_DAYS_SHORT_TO_FULL = {
-  [WeekDayEnum.MON]: "monday",
-  [WeekDayEnum.TUE]: "tuesday",
-  [WeekDayEnum.WED]: "wednesday",
-  [WeekDayEnum.THU]: "thursday",
-  [WeekDayEnum.FRI]: "friday",
-  [WeekDayEnum.SAT]: "saturday",
-  [WeekDayEnum.SUN]: "sunday",
-};
+import { IHabit } from "../types/types";
 
 export const HABITS: IHabit[] = [
   {

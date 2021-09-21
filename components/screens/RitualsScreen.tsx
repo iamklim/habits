@@ -7,8 +7,8 @@ import {
 } from "@ui-kitten/components";
 import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
-import { WEEK_DAYS } from "../../constants/habits.constant";
 import RitualInfo from "../components/RitualInfo";
+import { WEEK_DAYS } from "../../constants/schedule.constants";
 
 const themedStyles = StyleService.create({
   layout: {

@@ -1,6 +1,6 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
-import scheduleReducer from "./scheduleSlice";
+import scheduleReducer from "./schedule/scheduleSlice";
 import { AsyncStorage } from "react-native";
 import {
   FLUSH,

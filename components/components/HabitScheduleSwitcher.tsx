@@ -5,10 +5,11 @@ import {
   notificationTimeSelector,
   toggleHabitInWeekDay,
   weekdaysWithHabitSelector,
-} from "../../store/scheduleSlice";
+} from "../../store/schedule/scheduleSlice";
 import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
-import { WEEK_DAYS } from "../../constants/habits.constant";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
+import { BellOffIcon } from "./Icons";
+import { WEEK_DAYS } from "../../constants/schedule.constants";
 
 export const themedStyles = StyleService.create({
   container: {
@@ -22,11 +23,24 @@ export const themedStyles = StyleService.create({
     backgroundColor: "color-primary-200",
     borderRadius: 10,
   },
+  notification: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 15,
+  },
   notificationTime: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "color-primary-800",
-    marginRight: 4,
+    color: "color-primary-700",
+    textAlign: "center",
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    color: "color-primary-700",
   },
   weekDays: {
     display: "flex",
@@ -125,14 +139,19 @@ const HabitScheduleSwitcher = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.notificationTime}>
-        {notificationTimeParsed
-          ? notificationTimeParsed.toLocaleTimeString("en-US", {
+      <View style={styles.notification}>
+        {notificationTimeParsed ? (
+          <Text style={styles.notificationTime}>
+            {notificationTimeParsed.toLocaleTimeString("en-US", {
               hour: "2-digit",
               minute: "2-digit",
-            })
-          : "--:--"}
-      </Text>
+            })}
+          </Text>
+        ) : (
+          <BellOffIcon style={styles.icon} />
+        )}
+      </View>
+
       <View style={styles.weekDays}>
         {WEEK_DAYS.map((weekDay, index) => {
           const isActive = activeWeekDays.includes(weekDay);

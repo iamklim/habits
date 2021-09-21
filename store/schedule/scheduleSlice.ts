@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TimeOfDayEnum, WeekDayEnum } from "../types/types";
-import { RootState } from "./store";
+import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
+import { RootState } from "../store";
+import { JS_DAY_INDEX_TO_WEEKDAY } from "../../constants/schedule.constants";
+import { getTodayHabitsUpdated } from "./utils";
 
 type THabitRecord = Record<WeekDayEnum, number[]>;
 
@@ -9,11 +11,19 @@ interface ITimeOfDayState {
   habits: THabitRecord;
 }
 
-interface IScheduleState {
+export type TTodayRecord = Record<number, boolean>;
+
+export interface IScheduleState {
   habitsAdded: number[];
   morning: ITimeOfDayState;
   afternoon: ITimeOfDayState;
   evening: ITimeOfDayState;
+  currentWeekDay: WeekDayEnum | null;
+  today: {
+    morning: TTodayRecord;
+    afternoon: TTodayRecord;
+    evening: TTodayRecord;
+  };
 }
 
 const initialHabitsState: THabitRecord = {
@@ -36,6 +46,12 @@ const initialState: IScheduleState = {
   morning: initialTimeOfDayState,
   afternoon: initialTimeOfDayState,
   evening: initialTimeOfDayState,
+  currentWeekDay: null,
+  today: {
+    morning: {},
+    afternoon: {},
+    evening: {},
+  },
 };
 
 export const scheduleSlice = createSlice({
@@ -101,6 +117,34 @@ export const scheduleSlice = createSlice({
       const timeOfDay = action.payload.timeOfDay;
       state[timeOfDay].notificationTime = action.payload.notificationTime;
     },
+    setCurrentWeekDayAndUpdateTodayHabits: (state) => {
+      const currentDate = new Date();
+      const currentWeekDayIndex = currentDate.getDay();
+      const currentWeekDay = JS_DAY_INDEX_TO_WEEKDAY[currentWeekDayIndex];
+
+      const todayMorningHabits = getTodayHabitsUpdated({
+        state,
+        timeOfDay: TimeOfDayEnum.MORNING,
+        weekDay: currentWeekDay,
+      });
+
+      const todayAfternoonHabits = getTodayHabitsUpdated({
+        state,
+        timeOfDay: TimeOfDayEnum.AFTERNOON,
+        weekDay: currentWeekDay,
+      });
+
+      const todayEveningHabits = getTodayHabitsUpdated({
+        state,
+        timeOfDay: TimeOfDayEnum.EVENING,
+        weekDay: currentWeekDay,
+      });
+
+      state.currentWeekDay = currentWeekDay;
+      state.today.morning = todayMorningHabits;
+      state.today.afternoon = todayAfternoonHabits;
+      state.today.evening = todayEveningHabits;
+    },
   },
 });
 
@@ -110,6 +154,7 @@ export const {
   toggleHabitInWeekDay,
   removeHabitFromTimeOfDay,
   setNotificationTime,
+  setCurrentWeekDayAndUpdateTodayHabits,
 } = scheduleSlice.actions;
 
 export const notificationTimeSelector = ({
@@ -153,4 +198,5 @@ export const habitsByTimeOfDayAndWeekDaySelector = ({
   weekDay: WeekDayEnum;
 }) => state.schedule[timeOfDay].habits[weekDay];
 
-export default scheduleSlice.reducer;
+const scheduleSliceReducer = scheduleSlice.reducer;
+export default scheduleSliceReducer;

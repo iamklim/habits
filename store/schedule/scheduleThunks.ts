@@ -2,8 +2,8 @@ import {
   removeHabitFromHabitsAdded,
   removeHabitFromTimeOfDay,
 } from "./scheduleSlice";
-import { TimeOfDayEnum } from "../types/types";
-import { AppDispatch } from "./store";
+import { TimeOfDayEnum } from "../../types/types";
+import { AppDispatch } from "../store";
 
 export const removeHabit =
   ({ id }: { id: number }) =>

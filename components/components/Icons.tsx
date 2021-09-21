@@ -10,6 +10,10 @@ export const BellIcon = (props: IconProps) => (
   <Icon {...props} name="bell-outline" />
 );
 
+export const BellOffIcon = (props: IconProps) => (
+  <Icon {...props} name="bell-off" />
+);
+
 export const ListIcon = (props: IconProps) => (
   <Icon {...props} name="clipboard-list-outline" />
 );

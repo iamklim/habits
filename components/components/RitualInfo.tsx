@@ -7,7 +7,7 @@ import {
   habitsByTimeOfDayAndWeekDaySelector,
   notificationTimeSelector,
   setNotificationTime,
-} from "../../store/scheduleSlice";
+} from "../../store/schedule/scheduleSlice";
 import DateTimePicker, { Event } from "@react-native-community/datetimepicker";
 import { MinusIcon, PlusIcon } from "./Icons";
 import { TIME_OF_DAY_TO_DEFAULT_NOTIFICATION_HOUR } from "../../constants/schedule.constants";
