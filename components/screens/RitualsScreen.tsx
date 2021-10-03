@@ -27,7 +27,6 @@ const themedStyles = StyleService.create({
     borderBottomWidth: 2,
   },
   content: {
-    // paddingTop: 5,
     paddingHorizontal: 20,
   },
   weekDays: {

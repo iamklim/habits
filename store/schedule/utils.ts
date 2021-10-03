@@ -1,5 +1,6 @@
 import { IScheduleState, TTodayRecord } from "./scheduleSlice";
 import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
+import { JS_DAY_INDEX_TO_WEEKDAY } from "../../constants/schedule.constants";
 
 export const getTodayHabitsUpdated = ({
   state,
@@ -23,4 +24,10 @@ export const getTodayHabitsUpdated = ({
   });
 
   return todayStateUpdated;
+};
+
+export const getCurrentWeekDay = () => {
+  const currentDate = new Date();
+  const currentWeekDayIndex = currentDate.getDay();
+  return JS_DAY_INDEX_TO_WEEKDAY[currentWeekDayIndex];
 };

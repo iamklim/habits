@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
 import { RootState } from "../store";
-import { JS_DAY_INDEX_TO_WEEKDAY } from "../../constants/schedule.constants";
-import { getTodayHabitsUpdated } from "./utils";
+import { getCurrentWeekDay, getTodayHabitsUpdated } from "./utils";
 
 type THabitRecord = Record<WeekDayEnum, number[]>;
 
@@ -18,7 +17,7 @@ export interface IScheduleState {
   morning: ITimeOfDayState;
   afternoon: ITimeOfDayState;
   evening: ITimeOfDayState;
-  currentWeekDay: WeekDayEnum | null;
+  currentWeekDay: WeekDayEnum;
   today: {
     morning: TTodayRecord;
     afternoon: TTodayRecord;
@@ -46,7 +45,7 @@ const initialState: IScheduleState = {
   morning: initialTimeOfDayState,
   afternoon: initialTimeOfDayState,
   evening: initialTimeOfDayState,
-  currentWeekDay: null,
+  currentWeekDay: getCurrentWeekDay(),
   today: {
     morning: {},
     afternoon: {},
@@ -118,9 +117,7 @@ export const scheduleSlice = createSlice({
       state[timeOfDay].notificationTime = action.payload.notificationTime;
     },
     setCurrentWeekDayAndUpdateTodayHabits: (state) => {
-      const currentDate = new Date();
-      const currentWeekDayIndex = currentDate.getDay();
-      const currentWeekDay = JS_DAY_INDEX_TO_WEEKDAY[currentWeekDayIndex];
+      const currentWeekDay = getCurrentWeekDay();
 
       const todayMorningHabits = getTodayHabitsUpdated({
         state,
@@ -145,6 +142,17 @@ export const scheduleSlice = createSlice({
       state.today.afternoon = todayAfternoonHabits;
       state.today.evening = todayEveningHabits;
     },
+    updateTodayHabitStatus: (
+      state,
+      action: PayloadAction<{
+        timeOfDay: TimeOfDayEnum;
+        habitId: number;
+        habitStatus: boolean;
+      }>
+    ) => {
+      const { timeOfDay, habitId, habitStatus } = action.payload;
+      state.today[timeOfDay][habitId] = habitStatus;
+    },
   },
 });
 
@@ -155,6 +163,7 @@ export const {
   removeHabitFromTimeOfDay,
   setNotificationTime,
   setCurrentWeekDayAndUpdateTodayHabits,
+  updateTodayHabitStatus,
 } = scheduleSlice.actions;
 
 export const notificationTimeSelector = ({
@@ -197,6 +206,46 @@ export const habitsByTimeOfDayAndWeekDaySelector = ({
   timeOfDay: TimeOfDayEnum;
   weekDay: WeekDayEnum;
 }) => state.schedule[timeOfDay].habits[weekDay];
+
+export const currentWeekDaySelector = ({ state }: { state: RootState }) =>
+  state.schedule.currentWeekDay;
+
+export const todayHabitStatusSelector = ({
+  state,
+  timeOfDay,
+  habitId,
+}: {
+  state: RootState;
+  timeOfDay: TimeOfDayEnum;
+  habitId: number;
+}) => state.schedule.today[timeOfDay][habitId];
+
+export const todayHabitsProgressSelector = ({
+  state,
+}: {
+  state: RootState;
+}) => {
+  const morningHabitsEntries = Object.entries(state.schedule.today.morning);
+  const afternoonHabitsEntries = Object.entries(state.schedule.today.afternoon);
+  const eveningHabitsEntries = Object.entries(state.schedule.today.evening);
+
+  const totalHabitsEntries = [
+    ...morningHabitsEntries,
+    ...afternoonHabitsEntries,
+    ...eveningHabitsEntries,
+  ];
+  const totalHabitsCompleted = totalHabitsEntries.filter(
+    ([_, habitValue]) => habitValue
+  );
+
+  if (totalHabitsEntries.length === 0) {
+    return 0;
+  }
+
+  return Math.round(
+    (totalHabitsCompleted.length / totalHabitsEntries.length) * 100
+  );
+};
 
 const scheduleSliceReducer = scheduleSlice.reducer;
 export default scheduleSliceReducer;
