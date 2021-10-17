@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
+import { AvatarStateEnum, TimeOfDayEnum, WeekDayEnum } from "../../types/types";
 import { RootState } from "../store";
 import { getCurrentWeekDay, getTodayHabitsUpdated } from "./utils";
+import { AVATAR_ACTIVATION_SPEECHES } from "../../constants/avatar.constants";
 
 type THabitRecord = Record<WeekDayEnum, number[]>;
 
@@ -22,6 +23,11 @@ export interface IScheduleState {
     morning: TTodayRecord;
     afternoon: TTodayRecord;
     evening: TTodayRecord;
+  };
+  avatar: {
+    isActivated: boolean;
+    status: AvatarStateEnum;
+    speeches: string[];
   };
 }
 
@@ -50,6 +56,11 @@ const initialState: IScheduleState = {
     morning: {},
     afternoon: {},
     evening: {},
+  },
+  avatar: {
+    isActivated: false,
+    status: AvatarStateEnum.OFF,
+    speeches: [],
   },
 };
 
@@ -153,6 +164,24 @@ export const scheduleSlice = createSlice({
       const { timeOfDay, habitId, habitStatus } = action.payload;
       state.today[timeOfDay][habitId] = habitStatus;
     },
+    activateAvatar: (state) => {
+      state.avatar.isActivated = true;
+      state.avatar.speeches = AVATAR_ACTIVATION_SPEECHES;
+    },
+    setAvatarStatus: (
+      state,
+      action: PayloadAction<{
+        status: AvatarStateEnum;
+      }>
+    ) => {
+      state.avatar.status = action.payload.status;
+    },
+    removeCurrentSpeech: (state) => {
+      const speeches = state.avatar.speeches;
+      if (speeches.length) {
+        state.avatar.speeches = speeches.slice(1);
+      }
+    },
   },
 });
 
@@ -164,6 +193,9 @@ export const {
   setNotificationTime,
   setCurrentWeekDayAndUpdateTodayHabits,
   updateTodayHabitStatus,
+  activateAvatar,
+  setAvatarStatus,
+  removeCurrentSpeech,
 } = scheduleSlice.actions;
 
 export const notificationTimeSelector = ({
@@ -246,6 +278,15 @@ export const todayHabitsProgressSelector = ({
     (totalHabitsCompleted.length / totalHabitsEntries.length) * 100
   );
 };
+
+export const avatarStatusSelector = ({ state }: { state: RootState }) =>
+  state.schedule.avatar.status;
+
+export const avatarIsActivatedSelector = ({ state }: { state: RootState }) =>
+  state.schedule.avatar.isActivated;
+
+export const avatarSpeechesSelector = ({ state }: { state: RootState }) =>
+  state.schedule.avatar.speeches;
 
 const scheduleSliceReducer = scheduleSlice.reducer;
 export default scheduleSliceReducer;

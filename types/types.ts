@@ -71,3 +71,28 @@ export enum HabitsScreenTabEnum {
   HABITS = "habits",
   MY_HABITS = "myHabits",
 }
+
+export enum AvatarStateEnum {
+  OFF = "off",
+  IDLE_1 = "idle-1",
+  IDLE_2 = "idle-2",
+  LOVE = "love",
+  IDLE_SLEEP = "idle-sleep",
+  SLEEP = "sleep",
+  SLEEP_IDLE = "sleep-idle",
+}
+
+export interface AnimationObject {
+  v: string;
+  fr: number;
+  ip: number;
+  op: number;
+  w: number;
+  h: number;
+  nm: string;
+  ddd: number;
+  assets: any[];
+  layers: any[];
+}
+
+export type TLottieAnimation = string | AnimationObject | { uri: string };
