@@ -7,139 +7,123 @@ import IdleLoveIdleAnimation from "../../assets/animations/idle-love-idle.json";
 import IdleSleepAnimation from "../../assets/animations/idle-sleep.json";
 import SleepAnimation from "../../assets/animations/sleep.json";
 import SleepIdleAnimation from "../../assets/animations/sleep-idle.json";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
-import {
-  avatarIsActivatedSelector,
-  avatarSpeechesSelector,
-  avatarStatusSelector,
-  setAvatarStatus,
-  todayHabitsProgressSelector,
-} from "../../store/schedule/scheduleSlice";
+import { useAppSelector } from "../../hooks/redux-hooks";
+import { todayHabitsProgressSelector } from "../../store/schedule/scheduleSlice";
 import { AvatarStateEnum, TLottieAnimation } from "../../types/types";
 import { Animated, Easing } from "react-native";
 
+const getSource = (status: AvatarStateEnum): TLottieAnimation => {
+  switch (status) {
+    case AvatarStateEnum.OFF_IDLE:
+      return OffIdleAnimation;
+    case AvatarStateEnum.IDLE_1:
+      return Idle1Animation;
+    case AvatarStateEnum.IDLE_2:
+      return Idle2Animation;
+    case AvatarStateEnum.IDLE_LOVE_IDLE:
+      return IdleLoveIdleAnimation;
+    case AvatarStateEnum.IDLE_SLEEP:
+      return IdleSleepAnimation;
+    case AvatarStateEnum.SLEEP:
+      return SleepAnimation;
+    case AvatarStateEnum.SLEEP_IDLE:
+      return SleepIdleAnimation;
+    default:
+      return Idle1Animation;
+  }
+};
+
 export const Avatar = () => {
-  const dispatch = useAppDispatch();
-  const [source, setSource] = useState<TLottieAnimation | null>(null);
+  const [avatarStatus, setAvatarStatus] = useState(AvatarStateEnum.IDLE_1);
   const [isFinished, setIsFinished] = useState(true);
+  const [animation, setAnimation] =
+    useState<Animated.CompositeAnimation | null>(null);
 
   const progressAnim = useRef(new Animated.Value(0)).current;
 
-  const avatarStatus = useAppSelector((state) =>
-    avatarStatusSelector({ state })
-  );
-  const avatarIsActivated = useAppSelector((state) =>
-    avatarIsActivatedSelector({ state })
-  );
   const todayHabitsProgress = useAppSelector((state) =>
     todayHabitsProgressSelector({ state })
   );
-  const speeches = useAppSelector((state) => avatarSpeechesSelector({ state }));
 
-  const runAnimation = () => {
+  const runAnimation = (nextAvatarStatus: AvatarStateEnum) => {
+    if (animation) {
+      animation.reset();
+    }
+
+    setAvatarStatus(nextAvatarStatus);
     setIsFinished(false);
 
     const isShortAnimation =
-      avatarStatus === AvatarStateEnum.OFF_IDLE ||
-      avatarStatus === AvatarStateEnum.IDLE_SLEEP ||
-      avatarStatus === AvatarStateEnum.SLEEP_IDLE;
+      nextAvatarStatus === AvatarStateEnum.OFF_IDLE ||
+      nextAvatarStatus === AvatarStateEnum.IDLE_SLEEP ||
+      nextAvatarStatus === AvatarStateEnum.SLEEP_IDLE;
 
     const duration = isShortAnimation ? 1000 : 3000;
 
-    const animation = Animated.timing(progressAnim, {
+    const nextAnimation = Animated.timing(progressAnim, {
       duration,
       toValue: 1,
       easing: Easing.linear,
       useNativeDriver: false,
     });
 
-    animation.start(() => {
-      if (!isShortAnimation) {
-        animation.reset();
-      }
+    setAnimation(nextAnimation);
 
+    nextAnimation.start(() => {
       setIsFinished(true);
-
-      if (avatarStatus === AvatarStateEnum.OFF_IDLE) {
-        dispatch(setAvatarStatus({ status: AvatarStateEnum.IDLE_1 }));
-      }
-
-      if (avatarStatus === AvatarStateEnum.IDLE_1) {
-        dispatch(setAvatarStatus({ status: AvatarStateEnum.IDLE_2 }));
-      }
-
-      if (avatarStatus === AvatarStateEnum.IDLE_2) {
-        dispatch(setAvatarStatus({ status: AvatarStateEnum.IDLE_1 }));
-      }
-
-      if (avatarStatus === AvatarStateEnum.LOVE) {
-        dispatch(setAvatarStatus({ status: AvatarStateEnum.IDLE_1 }));
-      }
-
-      if (avatarStatus === AvatarStateEnum.IDLE_SLEEP) {
-        dispatch(setAvatarStatus({ status: AvatarStateEnum.SLEEP }));
-      }
-
-      if (avatarStatus === AvatarStateEnum.SLEEP_IDLE) {
-        dispatch(setAvatarStatus({ status: AvatarStateEnum.IDLE_1 }));
-      }
     });
   };
 
   useEffect(() => {
     if (isFinished) {
+      let nextAvatarStatus = avatarStatus;
+      const isAvatarTired = todayHabitsProgress <= 10;
+
       if (avatarStatus === AvatarStateEnum.OFF_IDLE) {
-        setSource(OffIdleAnimation);
+        nextAvatarStatus = AvatarStateEnum.IDLE_1;
       }
-      if (avatarStatus === AvatarStateEnum.LOVE) {
-        setSource(IdleLoveIdleAnimation);
-      }
+
       if (avatarStatus === AvatarStateEnum.IDLE_1) {
-        setSource(Idle1Animation);
+        if (isAvatarTired) {
+          nextAvatarStatus = AvatarStateEnum.IDLE_SLEEP;
+        } else {
+          nextAvatarStatus = AvatarStateEnum.IDLE_2;
+        }
       }
+
       if (avatarStatus === AvatarStateEnum.IDLE_2) {
-        setSource(Idle2Animation);
+        if (isAvatarTired) {
+          nextAvatarStatus = AvatarStateEnum.IDLE_SLEEP;
+        } else {
+          nextAvatarStatus = AvatarStateEnum.IDLE_1;
+        }
       }
+
+      if (avatarStatus === AvatarStateEnum.IDLE_LOVE_IDLE) {
+        nextAvatarStatus = AvatarStateEnum.IDLE_1;
+      }
+
       if (avatarStatus === AvatarStateEnum.IDLE_SLEEP) {
-        setSource(IdleSleepAnimation);
+        nextAvatarStatus = AvatarStateEnum.SLEEP;
       }
+
       if (avatarStatus === AvatarStateEnum.SLEEP) {
-        setSource(SleepAnimation);
+        if (!isAvatarTired) {
+          nextAvatarStatus = AvatarStateEnum.SLEEP_IDLE;
+        }
       }
+
       if (avatarStatus === AvatarStateEnum.SLEEP_IDLE) {
-        setSource(SleepIdleAnimation);
+        nextAvatarStatus = AvatarStateEnum.IDLE_1;
       }
-    }
-  }, [avatarStatus, isFinished]);
 
-  useEffect(() => {
-    if (
-      avatarIsActivated &&
-      speeches.length === 0 &&
-      todayHabitsProgress <= 10 &&
-      (avatarStatus === AvatarStateEnum.IDLE_1 ||
-        avatarStatus === AvatarStateEnum.IDLE_2)
-    ) {
-      dispatch(setAvatarStatus({ status: AvatarStateEnum.IDLE_SLEEP }));
+      runAnimation(nextAvatarStatus);
     }
+  }, [isFinished, todayHabitsProgress]);
 
-    if (
-      avatarIsActivated &&
-      speeches.length === 0 &&
-      todayHabitsProgress > 10 &&
-      avatarStatus === AvatarStateEnum.SLEEP
-    ) {
-      dispatch(setAvatarStatus({ status: AvatarStateEnum.SLEEP_IDLE }));
-    }
-  }, [avatarIsActivated, speeches, todayHabitsProgress, avatarStatus]);
-
-  useEffect(() => {
-    if (avatarIsActivated && isFinished) {
-      runAnimation();
-    }
-  }, [avatarIsActivated, isFinished]);
-
-  return source ? <LottieView source={source} progress={progressAnim} /> : null;
+  return (
+    <LottieView source={getSource(avatarStatus)} progress={progressAnim} />
+  );
 };
 
 export default Avatar;

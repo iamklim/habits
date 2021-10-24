@@ -58,8 +58,8 @@ const initialState: IScheduleState = {
     evening: {},
   },
   avatar: {
-    isActivated: false,
-    status: AvatarStateEnum.OFF_IDLE,
+    isActivated: true,
+    status: AvatarStateEnum.IDLE_1,
     speeches: [],
   },
 };
