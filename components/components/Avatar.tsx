@@ -39,25 +39,28 @@ export const Avatar = () => {
   const runAnimation = () => {
     setIsFinished(false);
 
+    const isShortAnimation =
+      avatarStatus === AvatarStateEnum.OFF_IDLE ||
+      avatarStatus === AvatarStateEnum.IDLE_SLEEP ||
+      avatarStatus === AvatarStateEnum.SLEEP_IDLE;
+
+    const duration = isShortAnimation ? 1000 : 3000;
+
     const animation = Animated.timing(progressAnim, {
+      duration,
       toValue: 1,
-      duration: 3000,
       easing: Easing.linear,
       useNativeDriver: false,
     });
 
     animation.start(() => {
-      if (
-        avatarStatus !== AvatarStateEnum.OFF &&
-        avatarStatus !== AvatarStateEnum.IDLE_SLEEP &&
-        avatarStatus !== AvatarStateEnum.SLEEP_IDLE
-      ) {
+      if (!isShortAnimation) {
         animation.reset();
       }
 
       setIsFinished(true);
 
-      if (avatarStatus === AvatarStateEnum.OFF) {
+      if (avatarStatus === AvatarStateEnum.OFF_IDLE) {
         dispatch(setAvatarStatus({ status: AvatarStateEnum.IDLE_1 }));
       }
 
@@ -85,7 +88,7 @@ export const Avatar = () => {
 
   useEffect(() => {
     if (isFinished) {
-      if (avatarStatus === AvatarStateEnum.OFF) {
+      if (avatarStatus === AvatarStateEnum.OFF_IDLE) {
         setSource(OffIdleAnimation);
       }
       if (avatarStatus === AvatarStateEnum.LOVE) {
@@ -114,9 +117,8 @@ export const Avatar = () => {
       avatarIsActivated &&
       speeches.length === 0 &&
       todayHabitsProgress <= 10 &&
-      avatarStatus !== AvatarStateEnum.IDLE_SLEEP &&
-      avatarStatus !== AvatarStateEnum.SLEEP &&
-      avatarStatus !== AvatarStateEnum.SLEEP_IDLE
+      (avatarStatus === AvatarStateEnum.IDLE_1 ||
+        avatarStatus === AvatarStateEnum.IDLE_2)
     ) {
       dispatch(setAvatarStatus({ status: AvatarStateEnum.IDLE_SLEEP }));
     }

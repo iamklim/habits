@@ -73,7 +73,7 @@ export enum HabitsScreenTabEnum {
 }
 
 export enum AvatarStateEnum {
-  OFF = "off",
+  OFF_IDLE = "off-idle",
   IDLE_1 = "idle-1",
   IDLE_2 = "idle-2",
   LOVE = "love",

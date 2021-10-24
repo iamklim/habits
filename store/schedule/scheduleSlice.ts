@@ -59,7 +59,7 @@ const initialState: IScheduleState = {
   },
   avatar: {
     isActivated: false,
-    status: AvatarStateEnum.OFF,
+    status: AvatarStateEnum.OFF_IDLE,
     speeches: [],
   },
 };
