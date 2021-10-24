@@ -8,7 +8,10 @@ import IdleSleepAnimation from "../../assets/animations/idle-sleep.json";
 import SleepAnimation from "../../assets/animations/sleep.json";
 import SleepIdleAnimation from "../../assets/animations/sleep-idle.json";
 import { useAppSelector } from "../../hooks/redux-hooks";
-import { todayHabitsProgressSelector } from "../../store/schedule/scheduleSlice";
+import {
+  avatarIsActivatedSelector,
+  todayHabitsProgressSelector,
+} from "../../store/schedule/scheduleSlice";
 import { AvatarStateEnum, TLottieAnimation } from "../../types/types";
 import { Animated, Easing } from "react-native";
 
@@ -34,11 +37,16 @@ const getSource = (status: AvatarStateEnum): TLottieAnimation => {
 };
 
 export const Avatar = () => {
-  const [avatarStatus, setAvatarStatus] = useState(AvatarStateEnum.IDLE_1);
-  const [isFinished, setIsFinished] = useState(true);
+  const [avatarStatus, setAvatarStatus] = useState<AvatarStateEnum>(
+    AvatarStateEnum.OFF_IDLE
+  );
+  const [isFinished, setIsFinished] = useState(false);
   const [animation, setAnimation] =
     useState<Animated.CompositeAnimation | null>(null);
 
+  const avatarIsActivated = useAppSelector((state) =>
+    avatarIsActivatedSelector({ state })
+  );
   const todayHabitsProgress = useAppSelector((state) =>
     todayHabitsProgressSelector({ state })
   );
@@ -134,6 +142,12 @@ export const Avatar = () => {
       runAnimation(nextAvatarStatus);
     }
   }, [isFinished, todayHabitsProgress]);
+
+  useEffect(() => {
+    if (avatarIsActivated) {
+      runAnimation(AvatarStateEnum.OFF_IDLE);
+    }
+  }, [avatarIsActivated]);
 
   return (
     <LottieView source={getSource(avatarStatus)} progress={progressAnimation} />
