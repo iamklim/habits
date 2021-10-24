@@ -3,7 +3,7 @@ import LottieView from "lottie-react-native";
 import OffIdleAnimation from "../../assets/animations/off-idle.json";
 import Idle1Animation from "../../assets/animations/idle-1.json";
 import Idle2Animation from "../../assets/animations/idle-2.json";
-import IdleLoveIdleAnimation from "../../assets/animations/idle-love-idle.json";
+import IdleLikeIdleAnimation from "../../assets/animations/idle-like-idle.json";
 import IdleSleepAnimation from "../../assets/animations/idle-sleep.json";
 import SleepAnimation from "../../assets/animations/sleep.json";
 import SleepIdleAnimation from "../../assets/animations/sleep-idle.json";
@@ -20,8 +20,8 @@ const getSource = (status: AvatarStateEnum): TLottieAnimation => {
       return Idle1Animation;
     case AvatarStateEnum.IDLE_2:
       return Idle2Animation;
-    case AvatarStateEnum.IDLE_LOVE_IDLE:
-      return IdleLoveIdleAnimation;
+    case AvatarStateEnum.IDLE_LIKE_IDLE:
+      return IdleLikeIdleAnimation;
     case AvatarStateEnum.IDLE_SLEEP:
       return IdleSleepAnimation;
     case AvatarStateEnum.SLEEP:
@@ -39,11 +39,12 @@ export const Avatar = () => {
   const [animation, setAnimation] =
     useState<Animated.CompositeAnimation | null>(null);
 
-  const progressAnim = useRef(new Animated.Value(0)).current;
-
   const todayHabitsProgress = useAppSelector((state) =>
     todayHabitsProgressSelector({ state })
   );
+
+  const prevTodayHabitsProgressRef = useRef<number | null>(null);
+  const progressAnimation = useRef(new Animated.Value(0)).current;
 
   const runAnimation = (nextAvatarStatus: AvatarStateEnum) => {
     if (animation) {
@@ -60,7 +61,7 @@ export const Avatar = () => {
 
     const duration = isShortAnimation ? 1000 : 3000;
 
-    const nextAnimation = Animated.timing(progressAnim, {
+    const nextAnimation = Animated.timing(progressAnimation, {
       duration,
       toValue: 1,
       easing: Easing.linear,
@@ -78,6 +79,9 @@ export const Avatar = () => {
     if (isFinished) {
       let nextAvatarStatus = avatarStatus;
       const isAvatarTired = todayHabitsProgress <= 10;
+      const isCurrProgressBiggerThanPrev =
+        prevTodayHabitsProgressRef.current &&
+        todayHabitsProgress > prevTodayHabitsProgressRef.current;
 
       if (avatarStatus === AvatarStateEnum.OFF_IDLE) {
         nextAvatarStatus = AvatarStateEnum.IDLE_1;
@@ -87,7 +91,11 @@ export const Avatar = () => {
         if (isAvatarTired) {
           nextAvatarStatus = AvatarStateEnum.IDLE_SLEEP;
         } else {
-          nextAvatarStatus = AvatarStateEnum.IDLE_2;
+          if (isCurrProgressBiggerThanPrev) {
+            nextAvatarStatus = AvatarStateEnum.IDLE_LIKE_IDLE;
+          } else {
+            nextAvatarStatus = AvatarStateEnum.IDLE_2;
+          }
         }
       }
 
@@ -95,11 +103,15 @@ export const Avatar = () => {
         if (isAvatarTired) {
           nextAvatarStatus = AvatarStateEnum.IDLE_SLEEP;
         } else {
-          nextAvatarStatus = AvatarStateEnum.IDLE_1;
+          if (isCurrProgressBiggerThanPrev) {
+            nextAvatarStatus = AvatarStateEnum.IDLE_LIKE_IDLE;
+          } else {
+            nextAvatarStatus = AvatarStateEnum.IDLE_1;
+          }
         }
       }
 
-      if (avatarStatus === AvatarStateEnum.IDLE_LOVE_IDLE) {
+      if (avatarStatus === AvatarStateEnum.IDLE_LIKE_IDLE) {
         nextAvatarStatus = AvatarStateEnum.IDLE_1;
       }
 
@@ -117,12 +129,14 @@ export const Avatar = () => {
         nextAvatarStatus = AvatarStateEnum.IDLE_1;
       }
 
+      prevTodayHabitsProgressRef.current = todayHabitsProgress;
+
       runAnimation(nextAvatarStatus);
     }
   }, [isFinished, todayHabitsProgress]);
 
   return (
-    <LottieView source={getSource(avatarStatus)} progress={progressAnim} />
+    <LottieView source={getSource(avatarStatus)} progress={progressAnimation} />
   );
 };
 
