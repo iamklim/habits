@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AvatarStateEnum, TimeOfDayEnum, WeekDayEnum } from "../../types/types";
+import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
 import { RootState } from "../store";
 import { getCurrentWeekDay, getTodayHabitsUpdated } from "./utils";
 import { AVATAR_ACTIVATION_SPEECHES } from "../../constants/avatar.constants";
@@ -26,9 +26,9 @@ export interface IScheduleState {
   };
   avatar: {
     isActivated: boolean;
-    status: AvatarStateEnum;
     speeches: string[];
   };
+  isNotificationsGranted: boolean;
 }
 
 const initialHabitsState: THabitRecord = {
@@ -59,9 +59,9 @@ const initialState: IScheduleState = {
   },
   avatar: {
     isActivated: false,
-    status: AvatarStateEnum.IDLE_1,
     speeches: [],
   },
+  isNotificationsGranted: false,
 };
 
 export const scheduleSlice = createSlice({
@@ -168,19 +168,14 @@ export const scheduleSlice = createSlice({
       state.avatar.isActivated = true;
       state.avatar.speeches = AVATAR_ACTIVATION_SPEECHES;
     },
-    setAvatarStatus: (
-      state,
-      action: PayloadAction<{
-        status: AvatarStateEnum;
-      }>
-    ) => {
-      state.avatar.status = action.payload.status;
-    },
     removeCurrentSpeech: (state) => {
       const speeches = state.avatar.speeches;
       if (speeches.length) {
         state.avatar.speeches = speeches.slice(1);
       }
+    },
+    setIsNotificationsGranted: (state, action: PayloadAction<boolean>) => {
+      state.isNotificationsGranted = action.payload;
     },
   },
 });
@@ -194,8 +189,8 @@ export const {
   setCurrentWeekDayAndUpdateTodayHabits,
   updateTodayHabitStatus,
   activateAvatar,
-  setAvatarStatus,
   removeCurrentSpeech,
+  setIsNotificationsGranted,
 } = scheduleSlice.actions;
 
 export const notificationTimeSelector = ({
@@ -279,14 +274,17 @@ export const todayHabitsProgressSelector = ({
   );
 };
 
-export const avatarStatusSelector = ({ state }: { state: RootState }) =>
-  state.schedule.avatar.status;
-
 export const avatarIsActivatedSelector = ({ state }: { state: RootState }) =>
   state.schedule.avatar.isActivated;
 
 export const avatarSpeechesSelector = ({ state }: { state: RootState }) =>
   state.schedule.avatar.speeches;
+
+export const isNotificationsGrantedSelector = ({
+  state,
+}: {
+  state: RootState;
+}) => state.schedule.isNotificationsGranted;
 
 const scheduleSliceReducer = scheduleSlice.reducer;
 export default scheduleSliceReducer;

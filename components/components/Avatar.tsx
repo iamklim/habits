@@ -10,6 +10,7 @@ import SleepIdleAnimation from "../../assets/animations/sleep-idle.json";
 import { useAppSelector } from "../../hooks/redux-hooks";
 import {
   avatarIsActivatedSelector,
+  avatarSpeechesSelector,
   todayHabitsProgressSelector,
 } from "../../store/schedule/scheduleSlice";
 import { AvatarStateEnum, TLottieAnimation } from "../../types/types";
@@ -50,6 +51,7 @@ export const Avatar = () => {
   const todayHabitsProgress = useAppSelector((state) =>
     todayHabitsProgressSelector({ state })
   );
+  const speeches = useAppSelector((state) => avatarSpeechesSelector({ state }));
 
   const prevTodayHabitsProgressRef = useRef<number | null>(null);
   const progressAnimation = useRef(new Animated.Value(0)).current;
@@ -90,13 +92,14 @@ export const Avatar = () => {
       const isCurrProgressBiggerThanPrev =
         prevTodayHabitsProgressRef.current &&
         todayHabitsProgress > prevTodayHabitsProgressRef.current;
+      const isSpeechesEmpty = speeches.length === 0;
 
       if (avatarStatus === AvatarStateEnum.OFF_IDLE) {
         nextAvatarStatus = AvatarStateEnum.IDLE_1;
       }
 
       if (avatarStatus === AvatarStateEnum.IDLE_1) {
-        if (isAvatarTired) {
+        if (isAvatarTired && isSpeechesEmpty) {
           nextAvatarStatus = AvatarStateEnum.IDLE_SLEEP;
         } else {
           if (isCurrProgressBiggerThanPrev) {
@@ -108,7 +111,7 @@ export const Avatar = () => {
       }
 
       if (avatarStatus === AvatarStateEnum.IDLE_2) {
-        if (isAvatarTired) {
+        if (isAvatarTired && isSpeechesEmpty) {
           nextAvatarStatus = AvatarStateEnum.IDLE_SLEEP;
         } else {
           if (isCurrProgressBiggerThanPrev) {
@@ -141,7 +144,7 @@ export const Avatar = () => {
 
       runAnimation(nextAvatarStatus);
     }
-  }, [isFinished, todayHabitsProgress]);
+  }, [isFinished, todayHabitsProgress, speeches]);
 
   useEffect(() => {
     if (avatarIsActivated) {

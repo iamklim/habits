@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { StyleService, Text, useStyleSheet } from "@ui-kitten/components";
 import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 import {
   habitsByTimeOfDayAndWeekDaySelector,
+  isNotificationsGrantedSelector,
   notificationTimeSelector,
+  setIsNotificationsGranted,
   setNotificationTime,
 } from "../../store/schedule/scheduleSlice";
 import DateTimePicker, { Event } from "@react-native-community/datetimepicker";
@@ -13,6 +15,7 @@ import { MinusIcon, PlusIcon } from "./Icons";
 import { TIME_OF_DAY_TO_DEFAULT_NOTIFICATION_HOUR } from "../../constants/schedule.constants";
 import RitualHabit from "./RitualHabit";
 import RitualEmptyTag from "./RitualEmptyTag";
+import * as Notifications from "expo-notifications";
 
 const themedStyles = StyleService.create({
   ritualTitle: {
@@ -111,6 +114,10 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
   );
   const isNotificationTimeAvailable = Boolean(notificationTime?.length);
 
+  const isNotificationsGranted = useAppSelector((state) =>
+    isNotificationsGrantedSelector({ state })
+  );
+
   const timeOfDayCamelCased =
     timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1).toLowerCase();
 
@@ -123,17 +130,25 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
     );
   };
 
-  const onSetDefaultNotification = () => {
-    const defaultDate = new Date();
-    defaultDate.setHours(TIME_OF_DAY_TO_DEFAULT_NOTIFICATION_HOUR[timeOfDay]);
-    defaultDate.setMinutes(0);
+  const onSetDefaultNotification = async () => {
+    // We need to ask for Notification permissions for ios devices
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status === "granted") {
+      dispatch(setIsNotificationsGranted(true));
 
-    dispatch(
-      setNotificationTime({
-        timeOfDay,
-        notificationTime: defaultDate.toString(),
-      })
-    );
+      const defaultDate = new Date();
+      defaultDate.setHours(TIME_OF_DAY_TO_DEFAULT_NOTIFICATION_HOUR[timeOfDay]);
+      defaultDate.setMinutes(0);
+
+      dispatch(
+        setNotificationTime({
+          timeOfDay,
+          notificationTime: defaultDate.toString(),
+        })
+      );
+    } else {
+      dispatch(setIsNotificationsGranted(false));
+    }
   };
 
   const onRemoveNotification = () => {
@@ -145,13 +160,37 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
     );
   };
 
+  useEffect(() => {
+    if (isNotificationTimeAvailable) {
+      const date = new Date(notificationTime);
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+
+      const schedulingOptions = {
+        content: {
+          title: `Time to complete ${timeOfDayCamelCased} ritual`,
+          body: `Chip waits for your habits to be completed!`,
+          sound: true,
+        },
+        trigger: {
+          hour,
+          minute,
+          repeats: true,
+        },
+      };
+      // Notifications show only when app is not active.
+      // (ie. another app being used or device's screen is locked)
+      Notifications.scheduleNotificationAsync(schedulingOptions);
+    }
+  }, [isNotificationTimeAvailable]);
+
   return (
     <View>
       <Text style={styles.ritualTitle}>{`${timeOfDayCamelCased} ritual`}</Text>
       <View style={styles.ritualNotification}>
         <Text style={styles.ritualNotificationText}>Notification: </Text>
         <View style={styles.ritualNotificationTime}>
-          {isNotificationTimeAvailable && (
+          {isNotificationTimeAvailable && isNotificationsGranted && (
             <View style={styles.ritualNotificationTimePicker}>
               <DateTimePicker
                 value={new Date(notificationTime)}
@@ -161,7 +200,7 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
               />
             </View>
           )}
-          {isNotificationTimeAvailable ? (
+          {isNotificationTimeAvailable && isNotificationsGranted ? (
             <RemoveNotificationButton onPress={onRemoveNotification} />
           ) : (
             <AddNotificationButton onPress={onSetDefaultNotification} />
