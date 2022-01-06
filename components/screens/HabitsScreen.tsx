@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import {
   Button,
   Layout,
@@ -46,6 +46,11 @@ const themedStyles = StyleService.create({
   button: {
     marginHorizontal: 2,
   },
+  text: {
+    fontSize: 14,
+    textAlign: "center",
+    marginTop: 10,
+  },
 });
 
 interface IHabitsListProps {
@@ -72,22 +77,26 @@ const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
 
   return (
     <>
-      {habits.map(({ id, name, icon, description }) => {
-        return (
-          <View style={styles.habitCard} key={id}>
-            <HabitCard
-              id={id}
-              name={name}
-              icon={icon}
-              description={description}
-              isAdded={isAddedHabits}
-              onHabitAdd={onHabitAdd}
-              onHabitRemove={onHabitRemove}
-              onHabitOpen={onHabitOpen}
-            />
-          </View>
-        );
-      })}
+      {habits.length ? (
+        habits.map(({ id, name, icon, description }) => {
+          return (
+            <View style={styles.habitCard} key={id}>
+              <HabitCard
+                id={id}
+                name={name}
+                icon={icon}
+                description={description}
+                isAdded={isAddedHabits}
+                onHabitAdd={onHabitAdd}
+                onHabitRemove={onHabitRemove}
+                onHabitOpen={onHabitOpen}
+              />
+            </View>
+          );
+        })
+      ) : (
+        <Text style={styles.text}>You have no habits added</Text>
+      )}
     </>
   );
 };
@@ -132,7 +141,7 @@ const HabitsScreen = () => {
               onPress={onHabitsPress}
               appearance={isHabitsTab ? "filled" : "ghost"}
             >
-              Habits
+              All habits
             </Button>
           </View>
           <View style={styles.button}>
