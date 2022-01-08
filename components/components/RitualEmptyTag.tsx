@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
+  BottomTabNavigatorScreensEnum,
   HabitsScreenTabEnum,
   StackNavigatorScreensEnum,
-  THabitsScreenNavigationProp,
   TimeOfDayEnum,
   WeekDayEnum,
 } from "../../types/types";
@@ -16,13 +16,15 @@ interface IRitualEmptyTagProps {
 }
 
 const RitualEmptyTag = ({ timeOfDay, weekDay }: IRitualEmptyTagProps) => {
-  const navigation = useNavigation<THabitsScreenNavigationProp>();
+  const navigation = useNavigation();
 
   const tagText = `Add habit for ${WEEK_DAYS_SHORT_TO_FULL[weekDay]} ${timeOfDay}`;
 
   const onPress = () => {
-    navigation.navigate(StackNavigatorScreensEnum.HABITS_LIST, {
-      tab: HabitsScreenTabEnum.MY_HABITS,
+    // @ts-ignore
+    navigation.navigate(BottomTabNavigatorScreensEnum.HABITS, {
+      screen: StackNavigatorScreensEnum.HABITS_LIST,
+      params: { tab: HabitsScreenTabEnum.MY_HABITS },
     });
   };
 

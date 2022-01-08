@@ -62,7 +62,6 @@ const themedStyles = StyleService.create({
   },
 
   ritualInfo: {
-    // marginBottom: 20,
     borderBottomColor: "color-basic-transparent-100",
     borderBottomWidth: 2,
     paddingVertical: 15,

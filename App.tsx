@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
+// import { useEffect } from "react";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider, IconRegistry } from "@ui-kitten/components";
 import { AppNavigator } from "./components/AppNavigator";
@@ -13,9 +14,10 @@ import AppWrapper from "./components/AppWrapper";
 let persistor = persistStore(store);
 
 export default function App() {
-  useEffect(() => {
-    persistor.purge();
-  }, []);
+  // purge current store
+  // useEffect(() => {
+  //   persistor.purge();
+  // }, []);
 
   return (
     <>

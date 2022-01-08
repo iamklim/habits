@@ -1,6 +1,5 @@
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/native-stack";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 
 export enum StackNavigatorScreensEnum {
   HABITS_LIST = "HabitsList",
@@ -39,10 +38,10 @@ export type TBottomTabNavigatorParams = {
   [BottomTabNavigatorScreensEnum.HABITS]: undefined;
 };
 
-export type TRitualsScreenNavigationProp = BottomTabNavigationProp<
-  TBottomTabNavigatorParams,
-  BottomTabNavigatorScreensEnum.RITUALS
->;
+// export type TRitualsScreenNavigationProp = BottomTabNavigationProp<
+//   TBottomTabNavigatorParams,
+//   BottomTabNavigatorScreensEnum.RITUALS
+// >;
 
 export interface IHabit {
   id: number;

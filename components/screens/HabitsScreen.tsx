@@ -13,6 +13,7 @@ import { addHabit } from "../../store/schedule/scheduleSlice";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { removeHabit } from "../../store/schedule/scheduleThunks";
 import {
+  BottomTabNavigatorScreensEnum,
   HabitsScreenTabEnum,
   IHabit,
   StackNavigatorScreensEnum,
@@ -68,7 +69,7 @@ interface IHabitsListProps {
 const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
   const dispatch = useAppDispatch();
   const styles = useStyleSheet(themedStyles);
-  const navigation = useNavigation<THabitsScreenNavigationProp>();
+  const navigation = useNavigation();
   const isHabitsAvailable = Boolean(habits.length);
 
   const onHabitAdd = ({ id }: { id: number }) => {
@@ -80,12 +81,18 @@ const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
   };
 
   const onHabitOpen = ({ id }: { id: number }) => {
-    navigation.navigate(StackNavigatorScreensEnum.HABIT_INFO, { id });
+    // @ts-ignore
+    navigation.navigate(BottomTabNavigatorScreensEnum.HABITS, {
+      screen: StackNavigatorScreensEnum.HABIT_INFO,
+      params: { id },
+    });
   };
 
   const onTagPress = () => {
-    navigation.navigate(StackNavigatorScreensEnum.HABITS_LIST, {
-      tab: HabitsScreenTabEnum.HABITS,
+    // @ts-ignore
+    navigation.navigate(BottomTabNavigatorScreensEnum.HABITS, {
+      screen: StackNavigatorScreensEnum.HABITS_LIST,
+      params: { tab: HabitsScreenTabEnum.HABITS },
     });
   };
 
@@ -108,10 +115,14 @@ const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
             </View>
           );
         })
-      ) : (
+      ) : isAddedHabits ? (
         <View style={styles.habitAddView}>
           <Text style={styles.text}>You have no habits </Text>
           <Tag onPress={onTagPress} text="Add some" />
+        </View>
+      ) : (
+        <View style={styles.habitAddView}>
+          <Text style={styles.text}>Great! All habits are added</Text>
         </View>
       )}
     </>
