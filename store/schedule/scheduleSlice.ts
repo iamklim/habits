@@ -1,8 +1,9 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {TimeOfDayEnum, WeekDayEnum} from "../../types/types";
-import {RootState} from "../store";
-import {getCurrentWeekDay, getTodayHabitsUpdated} from "./utils";
-import {AVATAR_ACTIVATION_SPEECHES} from "../../constants/avatar.constants";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
+import { RootState } from "../store";
+import { getCurrentWeekDay, getTodayHabitsUpdated } from "./utils";
+import { AVATAR_ACTIVATION_SPEECHES } from "../../constants/avatar.constants";
+import { PURGE } from "redux-persist";
 
 type THabitRecord = Record<WeekDayEnum, number[]>;
 
@@ -95,7 +96,7 @@ export const scheduleSlice = createSlice({
       const id = action.payload.id;
       const habitsAddedCurrent = state.habitsAdded;
       state.habitsAdded = habitsAddedCurrent.filter(
-          (habitId) => habitId !== id
+        (habitId) => habitId !== id
       );
     },
     toggleHabitInWeekDay: (
@@ -183,6 +184,12 @@ export const scheduleSlice = createSlice({
     setIsNotificationsGranted: (state, action: PayloadAction<boolean>) => {
       state.isNotificationsGranted = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    // to make persistor.purge() work
+    builder.addCase(PURGE, () => {
+      return initialState;
+    });
   },
 });
 
