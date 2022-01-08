@@ -3,6 +3,8 @@ import LottieView from "lottie-react-native";
 import OffIdleAnimation from "../../assets/animations/off-idle.json";
 import Idle1Animation from "../../assets/animations/idle-1.json";
 import Idle2Animation from "../../assets/animations/idle-2.json";
+import Idle1FullAnimation from "../../assets/animations/idle-1-full.json";
+import Idle2FullAnimation from "../../assets/animations/idle-2-full.json";
 import IdleLoveIdleAnimation from "../../assets/animations/idle-love-idle.json";
 import IdleLikeIdleAnimation from "../../assets/animations/idle-like-idle.json";
 import IdleSleepAnimation from "../../assets/animations/idle-sleep.json";
@@ -30,6 +32,10 @@ const getSource = (status: AvatarStateEnum): TLottieAnimation => {
       return Idle1Animation;
     case AvatarStateEnum.IDLE_2:
       return Idle2Animation;
+    case AvatarStateEnum.IDLE_1_FULL:
+      return Idle1FullAnimation;
+    case AvatarStateEnum.IDLE_2_FULL:
+      return Idle2FullAnimation;
     case AvatarStateEnum.IDLE_LOVE_IDLE:
       return IdleLoveIdleAnimation;
     case AvatarStateEnum.IDLE_LIKE_IDLE:
@@ -103,6 +109,7 @@ export const Avatar = () => {
     if (isFinished) {
       let nextAvatarStatus = avatarStatus;
       const isAvatarTired = todayHabitsProgress <= 10;
+      const isAvatarFull = todayHabitsProgress >= 100;
       const isCurrProgressBiggerThanPrev =
         prevTodayHabitsProgressRef.current &&
         todayHabitsProgress > prevTodayHabitsProgressRef.current;
@@ -112,11 +119,16 @@ export const Avatar = () => {
         nextAvatarStatus = AvatarStateEnum.IDLE_1;
       }
 
-      if (avatarStatus === AvatarStateEnum.IDLE_1) {
+      if (
+        avatarStatus === AvatarStateEnum.IDLE_1 ||
+        avatarStatus === AvatarStateEnum.IDLE_1_FULL
+      ) {
         if (isAvatarTired && isSpeechesEmpty) {
           nextAvatarStatus = AvatarStateEnum.IDLE_SLEEP;
         } else {
-          if (isCurrProgressBiggerThanPrev) {
+          if (isAvatarFull) {
+            nextAvatarStatus = AvatarStateEnum.IDLE_2_FULL;
+          } else if (isCurrProgressBiggerThanPrev) {
             const reactionType = getRandomOption([
               AvatarReactionType.ANIMATION,
               AvatarReactionType.SPEECH,
@@ -138,11 +150,16 @@ export const Avatar = () => {
         }
       }
 
-      if (avatarStatus === AvatarStateEnum.IDLE_2) {
+      if (
+        avatarStatus === AvatarStateEnum.IDLE_2 ||
+        avatarStatus === AvatarStateEnum.IDLE_2_FULL
+      ) {
         if (isAvatarTired && isSpeechesEmpty) {
           nextAvatarStatus = AvatarStateEnum.IDLE_SLEEP;
         } else {
-          if (isCurrProgressBiggerThanPrev) {
+          if (isAvatarFull) {
+            nextAvatarStatus = AvatarStateEnum.IDLE_1_FULL;
+          } else if (isCurrProgressBiggerThanPrev) {
             const reactionType = getRandomOption([
               AvatarReactionType.ANIMATION,
               AvatarReactionType.SPEECH,
@@ -168,7 +185,11 @@ export const Avatar = () => {
         avatarStatus === AvatarStateEnum.IDLE_LOVE_IDLE ||
         avatarStatus === AvatarStateEnum.IDLE_LIKE_IDLE
       ) {
-        nextAvatarStatus = AvatarStateEnum.IDLE_1;
+        if (isAvatarFull) {
+          nextAvatarStatus = AvatarStateEnum.IDLE_1_FULL;
+        } else {
+          nextAvatarStatus = AvatarStateEnum.IDLE_1;
+        }
       }
 
       if (avatarStatus === AvatarStateEnum.IDLE_SLEEP) {

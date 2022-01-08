@@ -75,6 +75,8 @@ export enum AvatarStateEnum {
   OFF_IDLE = "off-idle",
   IDLE_1 = "idle-1",
   IDLE_2 = "idle-2",
+  IDLE_1_FULL = "idle-1-full",
+  IDLE_2_FULL = "idle-2-full",
   IDLE_LOVE_IDLE = "idle_love_idle",
   IDLE_LIKE_IDLE = "idle_like_idle",
   IDLE_SLEEP = "idle-sleep",

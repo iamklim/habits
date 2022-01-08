@@ -16,7 +16,7 @@ export const AVATAR_MOTIVATIONAL_SPEECHES = [
   "Only you can change your life. No one can do it for you",
   "Life changes very quickly, in a very positive way, if you let it",
   "Very good! Thank you for charging 🙌",
-  "⚡⚡⚡❤️⚡⚡⚡",
+  "⚡⚡❤️⚡⚡",
 ];
 
 export enum AvatarReactionType {
