@@ -38,7 +38,7 @@ const themedStyles = StyleService.create({
     alignItems: "center",
   },
   ritualNotificationTimePicker: {
-    flexBasis: 90,
+    flexBasis: 180,
     marginRight: 6,
   },
   buttonContainer: {

@@ -3,18 +3,24 @@ import LottieView from "lottie-react-native";
 import OffIdleAnimation from "../../assets/animations/off-idle.json";
 import Idle1Animation from "../../assets/animations/idle-1.json";
 import Idle2Animation from "../../assets/animations/idle-2.json";
+import IdleLoveIdleAnimation from "../../assets/animations/idle-love-idle.json";
 import IdleLikeIdleAnimation from "../../assets/animations/idle-like-idle.json";
 import IdleSleepAnimation from "../../assets/animations/idle-sleep.json";
 import SleepAnimation from "../../assets/animations/sleep.json";
 import SleepIdleAnimation from "../../assets/animations/sleep-idle.json";
-import { useAppSelector } from "../../hooks/redux-hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 import {
   avatarIsActivatedSelector,
   avatarSpeechesSelector,
+  setAvatarSpeeches,
   todayHabitsProgressSelector,
 } from "../../store/schedule/scheduleSlice";
 import { AvatarStateEnum, TLottieAnimation } from "../../types/types";
 import { Animated, Easing } from "react-native";
+import {
+  AVATAR_MOTIVATIONAL_SPEECHES,
+  AvatarReactionType,
+} from "../../constants/avatar.constants";
 
 const getSource = (status: AvatarStateEnum): TLottieAnimation => {
   switch (status) {
@@ -24,6 +30,8 @@ const getSource = (status: AvatarStateEnum): TLottieAnimation => {
       return Idle1Animation;
     case AvatarStateEnum.IDLE_2:
       return Idle2Animation;
+    case AvatarStateEnum.IDLE_LOVE_IDLE:
+      return IdleLoveIdleAnimation;
     case AvatarStateEnum.IDLE_LIKE_IDLE:
       return IdleLikeIdleAnimation;
     case AvatarStateEnum.IDLE_SLEEP:
@@ -37,6 +45,10 @@ const getSource = (status: AvatarStateEnum): TLottieAnimation => {
   }
 };
 
+const getRandomOption = (options: any[]) => {
+  return options[Math.floor(Math.random() * options.length)];
+};
+
 export const Avatar = () => {
   const [avatarStatus, setAvatarStatus] = useState<AvatarStateEnum>(
     AvatarStateEnum.OFF_IDLE
@@ -44,6 +56,8 @@ export const Avatar = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [animation, setAnimation] =
     useState<Animated.CompositeAnimation | null>(null);
+
+  const dispatch = useAppDispatch();
 
   const avatarIsActivated = useAppSelector((state) =>
     avatarIsActivatedSelector({ state })
@@ -103,7 +117,21 @@ export const Avatar = () => {
           nextAvatarStatus = AvatarStateEnum.IDLE_SLEEP;
         } else {
           if (isCurrProgressBiggerThanPrev) {
-            nextAvatarStatus = AvatarStateEnum.IDLE_LIKE_IDLE;
+            const reactionType = getRandomOption([
+              AvatarReactionType.ANIMATION,
+              AvatarReactionType.SPEECH,
+            ]);
+
+            if (reactionType === AvatarReactionType.ANIMATION) {
+              nextAvatarStatus = getRandomOption([
+                AvatarStateEnum.IDLE_LOVE_IDLE,
+                AvatarStateEnum.IDLE_LIKE_IDLE,
+              ]);
+            } else {
+              const speech = getRandomOption(AVATAR_MOTIVATIONAL_SPEECHES);
+              dispatch(setAvatarSpeeches([speech]));
+              nextAvatarStatus = AvatarStateEnum.IDLE_2;
+            }
           } else {
             nextAvatarStatus = AvatarStateEnum.IDLE_2;
           }
@@ -115,14 +143,31 @@ export const Avatar = () => {
           nextAvatarStatus = AvatarStateEnum.IDLE_SLEEP;
         } else {
           if (isCurrProgressBiggerThanPrev) {
-            nextAvatarStatus = AvatarStateEnum.IDLE_LIKE_IDLE;
+            const reactionType = getRandomOption([
+              AvatarReactionType.ANIMATION,
+              AvatarReactionType.SPEECH,
+            ]);
+
+            if (reactionType === AvatarReactionType.ANIMATION) {
+              nextAvatarStatus = getRandomOption([
+                AvatarStateEnum.IDLE_LOVE_IDLE,
+                AvatarStateEnum.IDLE_LIKE_IDLE,
+              ]);
+            } else {
+              const speech = getRandomOption(AVATAR_MOTIVATIONAL_SPEECHES);
+              dispatch(setAvatarSpeeches([speech]));
+              nextAvatarStatus = AvatarStateEnum.IDLE_1;
+            }
           } else {
             nextAvatarStatus = AvatarStateEnum.IDLE_1;
           }
         }
       }
 
-      if (avatarStatus === AvatarStateEnum.IDLE_LIKE_IDLE) {
+      if (
+        avatarStatus === AvatarStateEnum.IDLE_LOVE_IDLE ||
+        avatarStatus === AvatarStateEnum.IDLE_LIKE_IDLE
+      ) {
         nextAvatarStatus = AvatarStateEnum.IDLE_1;
       }
 

@@ -1,10 +1,11 @@
 import React from "react";
-import { SafeAreaView, ScrollView, Text, View } from "react-native";
+import { SafeAreaView, ScrollView, View } from "react-native";
 import {
   Button,
   Layout,
   StyleService,
   useStyleSheet,
+  Text,
 } from "@ui-kitten/components";
 import HabitCard from "../components/HabitCard";
 import { HABITS } from "../../constants/habits.constant";
@@ -19,6 +20,7 @@ import {
   THabitsScreenNavigationProp,
 } from "../../types/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
+import Tag from "../components/Tag";
 
 const themedStyles = StyleService.create({
   layout: {
@@ -43,13 +45,18 @@ const themedStyles = StyleService.create({
   habitCard: {
     marginBottom: 10,
   },
+  habitAddView: {
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   button: {
     marginHorizontal: 2,
   },
   text: {
-    fontSize: 14,
-    textAlign: "center",
-    marginTop: 10,
+    fontSize: 16,
   },
 });
 
@@ -62,6 +69,7 @@ const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
   const dispatch = useAppDispatch();
   const styles = useStyleSheet(themedStyles);
   const navigation = useNavigation<THabitsScreenNavigationProp>();
+  const isHabitsAvailable = Boolean(habits.length);
 
   const onHabitAdd = ({ id }: { id: number }) => {
     dispatch(addHabit({ id }));
@@ -75,9 +83,15 @@ const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
     navigation.navigate(StackNavigatorScreensEnum.HABIT_INFO, { id });
   };
 
+  const onTagPress = () => {
+    navigation.navigate(StackNavigatorScreensEnum.HABITS_LIST, {
+      tab: HabitsScreenTabEnum.HABITS,
+    });
+  };
+
   return (
     <>
-      {habits.length ? (
+      {isHabitsAvailable ? (
         habits.map(({ id, name, icon, description }) => {
           return (
             <View style={styles.habitCard} key={id}>
@@ -95,7 +109,10 @@ const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
           );
         })
       ) : (
-        <Text style={styles.text}>You have no habits added</Text>
+        <View style={styles.habitAddView}>
+          <Text style={styles.text}>You have no habits </Text>
+          <Tag onPress={onTagPress} text="Add some" />
+        </View>
       )}
     </>
   );

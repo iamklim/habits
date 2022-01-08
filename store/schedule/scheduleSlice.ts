@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
-import { RootState } from "../store";
-import { getCurrentWeekDay, getTodayHabitsUpdated } from "./utils";
-import { AVATAR_ACTIVATION_SPEECHES } from "../../constants/avatar.constants";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {TimeOfDayEnum, WeekDayEnum} from "../../types/types";
+import {RootState} from "../store";
+import {getCurrentWeekDay, getTodayHabitsUpdated} from "./utils";
+import {AVATAR_ACTIVATION_SPEECHES} from "../../constants/avatar.constants";
 
 type THabitRecord = Record<WeekDayEnum, number[]>;
 
@@ -78,7 +78,7 @@ export const scheduleSlice = createSlice({
       const id = action.payload.id;
       const timeOfDay = action.payload.timeOfDay;
       const habits = state[timeOfDay].habits;
-      const habitsUpdated = initialHabitsState;
+      const habitsUpdated = { ...initialHabitsState };
 
       Object.entries(habits).forEach(([weekDay, habitIds]) => {
         habitsUpdated[weekDay as WeekDayEnum] = habitIds.filter(
@@ -93,7 +93,10 @@ export const scheduleSlice = createSlice({
       action: PayloadAction<{ id: number }>
     ) => {
       const id = action.payload.id;
-      state.habitsAdded = state.habitsAdded.filter((habitId) => habitId !== id);
+      const habitsAddedCurrent = state.habitsAdded;
+      state.habitsAdded = habitsAddedCurrent.filter(
+          (habitId) => habitId !== id
+      );
     },
     toggleHabitInWeekDay: (
       state,
@@ -164,6 +167,9 @@ export const scheduleSlice = createSlice({
       const { timeOfDay, habitId, habitStatus } = action.payload;
       state.today[timeOfDay][habitId] = habitStatus;
     },
+    setAvatarSpeeches: (state, action: PayloadAction<string[]>) => {
+      state.avatar.speeches = action.payload;
+    },
     activateAvatar: (state) => {
       state.avatar.isActivated = true;
       state.avatar.speeches = AVATAR_ACTIVATION_SPEECHES;
@@ -188,6 +194,7 @@ export const {
   setNotificationTime,
   setCurrentWeekDayAndUpdateTodayHabits,
   updateTodayHabitStatus,
+  setAvatarSpeeches,
   activateAvatar,
   removeCurrentSpeech,
   setIsNotificationsGranted,

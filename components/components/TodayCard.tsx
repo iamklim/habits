@@ -15,6 +15,7 @@ import {
   updateTodayHabitStatus,
 } from "../../store/schedule/scheduleSlice";
 import { HABITS } from "../../constants/habits.constant";
+import RitualEmptyTag from "./RitualEmptyTag";
 
 const themedStyles = StyleService.create({
   container: {
@@ -43,6 +44,11 @@ const themedStyles = StyleService.create({
     fontWeight: "300",
     fontSize: 14,
     marginLeft: 15,
+  },
+  noHabitsView: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
 
@@ -128,7 +134,9 @@ const TodayCard = ({ timeOfDay }: ITodayCardProps) => {
           );
         })
       ) : (
-        <Text>No habits added</Text>
+        <View style={styles.noHabitsView}>
+          <RitualEmptyTag timeOfDay={timeOfDay} weekDay={currentWeekDay} />
+        </View>
       )}
     </View>
   );
