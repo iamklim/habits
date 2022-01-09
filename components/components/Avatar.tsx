@@ -116,7 +116,11 @@ export const Avatar = () => {
       const isSpeechesEmpty = speeches.length === 0;
 
       if (avatarStatus === AvatarStateEnum.OFF_IDLE) {
-        nextAvatarStatus = AvatarStateEnum.IDLE_1;
+        if (isAvatarFull) {
+          nextAvatarStatus = AvatarStateEnum.IDLE_1_FULL;
+        } else {
+          nextAvatarStatus = AvatarStateEnum.IDLE_1;
+        }
       }
 
       if (
