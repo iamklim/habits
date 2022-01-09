@@ -36,4 +36,60 @@ export const HABITS: IHabit[] = [
     description:
       "There are many benefits to regular stretching. Not only can stretching help increase your flexibility, which is an important factor of fitness, but it can also improve your posture, reduce stress and body aches.",
   },
+  {
+    id: 6,
+    name: "Fruit intake",
+    icon: "food-apple",
+    description:
+      "The natural sweetness of fruits may help curb sugar cravings. Choosing fruit instead of cookies or cakes will help you consume fewer calories and less fat and added sugars.",
+  },
+  {
+    id: 7,
+    name: "Veggies intake",
+    icon: "carrot",
+    description:
+      "Most vegetables are low in calories but high in vitamins, minerals and fiber. Eating plenty of vegetables may be one of the simplest ways to improve health and well-being.",
+  },
+  {
+    id: 8,
+    name: "Yoga",
+    icon: "yoga",
+    description:
+      "Slow movements and deep breathing increase blood flow and warm up muscles, while holding a pose can build strength. Yoga relaxes you, to help you sleep better.",
+  },
+  {
+    id: 9,
+    name: "Running",
+    icon: "run",
+    description:
+      "Running can give you a longer life, better sleep, improved immunity, mood and more. Numerous studies have shown that running increases lifespan.",
+  },
+  {
+    id: 10,
+    name: "Affirmation",
+    icon: "hand-heart",
+    description:
+      "Affirmations are short, positive statements aimed at changing one's way of thinking. If used correctly, they can motivate, raise self-esteem, and even get rid of fears and bad habits.",
+  },
+  {
+    id: 11,
+    name: "Breathing",
+    icon: "weather-windy",
+    description:
+      "Breathing practice improves the overall condition of the body. If practiced regularly, it reduces anxiety, increases happiness, and strengthens the immune system.",
+  },
+  {
+    id: 12,
+    name: "Skincare",
+    icon: "face-woman-outline",
+    description:
+      "Regular skin care can help prevent acne, eliminate wrinkles and keep your skin in good condition. A daily cleanser, a nighttime mask, or even a bit of tinted moisturizer can save the appearance of your skin.",
+  },
+  {
+    id: 13,
+    name: "Practice Gratitude",
+    icon: "account-heart",
+    description:
+      "Notice good things, look for them, appreciate them. Savor, absorb, and really pay attention to those good things. Express your gratitude to yourself, write it down, or thank someone.",
+  },
 ];
