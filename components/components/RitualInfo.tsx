@@ -6,8 +6,10 @@ import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 import {
   habitsByTimeOfDayAndWeekDaySelector,
   isNotificationsGrantedSelector,
+  notificationIdSelector,
   notificationTimeSelector,
   setIsNotificationsGranted,
+  setNotificationId,
   setNotificationTime,
 } from "../../store/schedule/scheduleSlice";
 import DateTimePicker, { Event } from "@react-native-community/datetimepicker";
@@ -112,6 +114,9 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
   const notificationTime = useAppSelector((state) =>
     notificationTimeSelector({ state, timeOfDay })
   );
+  const currentNotificationId = useAppSelector((state) =>
+    notificationIdSelector({ state, timeOfDay })
+  );
   const isNotificationTimeAvailable = Boolean(notificationTime?.length);
 
   const isNotificationsGranted = useAppSelector((state) =>
@@ -160,29 +165,45 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
     );
   };
 
-  useEffect(() => {
-    if (isNotificationTimeAvailable) {
-      const date = new Date(notificationTime);
-      const hour = date.getHours();
-      const minute = date.getMinutes();
+  const scheduleNotificationAdUpdateId = async (notificationTime: string) => {
+    await Notifications.cancelScheduledNotificationAsync(currentNotificationId);
 
-      const schedulingOptions = {
-        content: {
-          title: `Time to complete ${timeOfDayCamelCased} ritual`,
-          body: `Chip waits for your habits to be completed!`,
-          sound: true,
-        },
-        trigger: {
-          hour,
-          minute,
-          repeats: true,
-        },
-      };
-      // Notifications show only when app is not active.
-      // (ie. another app being used or device's screen is locked)
-      Notifications.scheduleNotificationAsync(schedulingOptions);
+    const date = new Date(notificationTime);
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+
+    const schedulingOptions = {
+      content: {
+        title: `Time to complete ${timeOfDayCamelCased} ritual`,
+        body: `Chip waits for your habits to be completed!`,
+        sound: true,
+      },
+      trigger: {
+        hour,
+        minute,
+        repeats: true,
+      },
+    };
+
+    // Notifications show only when app is not active.
+    // (ie. another app being used or device's screen is locked)
+    const updatedNotificationId = await Notifications.scheduleNotificationAsync(
+      schedulingOptions
+    );
+
+    dispatch(
+      setNotificationId({
+        timeOfDay,
+        notificationId: updatedNotificationId,
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (notificationTime) {
+      scheduleNotificationAdUpdateId(notificationTime);
     }
-  }, [isNotificationTimeAvailable]);
+  }, [notificationTime]);
 
   return (
     <View>

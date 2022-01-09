@@ -9,6 +9,7 @@ type THabitRecord = Record<WeekDayEnum, number[]>;
 
 interface ITimeOfDayState {
   notificationTime: string;
+  notificationId: string;
   habits: THabitRecord;
 }
 
@@ -44,6 +45,7 @@ const initialHabitsState: THabitRecord = {
 
 const initialTimeOfDayState: ITimeOfDayState = {
   notificationTime: "",
+  notificationId: "",
   habits: initialHabitsState,
 };
 
@@ -131,6 +133,16 @@ export const scheduleSlice = createSlice({
       const timeOfDay = action.payload.timeOfDay;
       state[timeOfDay].notificationTime = action.payload.notificationTime;
     },
+    setNotificationId: (
+      state,
+      action: PayloadAction<{
+        timeOfDay: TimeOfDayEnum;
+        notificationId: string;
+      }>
+    ) => {
+      const timeOfDay = action.payload.timeOfDay;
+      state[timeOfDay].notificationId = action.payload.notificationId;
+    },
     setCurrentWeekDayAndUpdateTodayHabits: (state) => {
       const currentWeekDay = getCurrentWeekDay();
 
@@ -199,6 +211,7 @@ export const {
   toggleHabitInWeekDay,
   removeHabitFromTimeOfDay,
   setNotificationTime,
+  setNotificationId,
   setCurrentWeekDayAndUpdateTodayHabits,
   updateTodayHabitStatus,
   setAvatarSpeeches,
@@ -214,6 +227,14 @@ export const notificationTimeSelector = ({
   state: RootState;
   timeOfDay: TimeOfDayEnum;
 }) => state.schedule[timeOfDay].notificationTime;
+
+export const notificationIdSelector = ({
+  state,
+  timeOfDay,
+}: {
+  state: RootState;
+  timeOfDay: TimeOfDayEnum;
+}) => state.schedule[timeOfDay].notificationId;
 
 export const weekdaysWithHabitSelector = ({
   state,
