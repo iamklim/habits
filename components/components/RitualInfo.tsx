@@ -156,7 +156,9 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
     }
   };
 
-  const onRemoveNotification = () => {
+  const onRemoveNotification = async () => {
+    await Notifications.cancelScheduledNotificationAsync(currentNotificationId);
+
     dispatch(
       setNotificationTime({
         timeOfDay,
