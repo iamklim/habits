@@ -10,6 +10,7 @@ import { View } from "react-native";
 
 const themedStyles = StyleService.create({
   card: {
+    position: "relative",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
@@ -21,6 +22,7 @@ const themedStyles = StyleService.create({
     minHeight: 155,
     backgroundColor: "background-basic-color-1",
     borderColor: "border-basic-color-4",
+    overflow: "hidden",
   },
   cardMain: {
     marginBottom: 10,
@@ -40,6 +42,15 @@ const themedStyles = StyleService.create({
     height: 24,
     marginRight: 5,
     color: "color-basic-600",
+  },
+  backgroundIcon: {
+    position: "absolute",
+    top: 0,
+    right: -70,
+    width: 200,
+    height: 200,
+    color: "color-basic-transparent-200",
+    transform: [{ rotate: "-15deg" }],
   },
   cardDescription: {
     fontSize: 14,
@@ -98,6 +109,7 @@ const HabitCard = ({
 
   return (
     <View style={styles.card}>
+      <Icon style={styles.backgroundIcon} name={icon} />
       <View style={styles.cardMain}>
         <View style={styles.cardTitle}>
           <Icon style={styles.icon} name={icon} />

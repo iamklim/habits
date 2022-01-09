@@ -6,7 +6,12 @@ import {
   TabNavigationState,
 } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { BottomNavigation, BottomNavigationTab } from "@ui-kitten/components";
+import {
+  BottomNavigation,
+  BottomNavigationTab,
+  StyleService,
+  useStyleSheet,
+} from "@ui-kitten/components";
 import TodayScreen from "./screens/TodayScreen";
 import HabitsScreen from "./screens/HabitsScreen";
 import RitualsScreen from "./screens/RitualsScreen";
@@ -31,12 +36,24 @@ interface IBottomTabBarProps {
   state: TabNavigationState<ParamListBase>;
 }
 
+const themedStyles = StyleService.create({
+  bottomNavigation: {
+    shadowOffset: { width: 0, height: -4 },
+    shadowRadius: 4,
+    shadowColor: "color-basic-1000",
+    shadowOpacity: 0.1,
+  },
+});
+
 const BottomTabBar = ({ navigation, state }: IBottomTabBarProps) => {
+  const styles = useStyleSheet(themedStyles);
+
   return (
     <SafeAreaView>
       <BottomNavigation
         selectedIndex={state.index}
         onSelect={(index) => navigation.navigate(state.routeNames[index])}
+        style={styles.bottomNavigation}
       >
         <BottomNavigationTab title="TODAY" icon={CalendarTodayIcon} />
         <BottomNavigationTab title="HABITS" icon={ListIcon} />
