@@ -35,3 +35,13 @@ export const JS_DAY_INDEX_TO_WEEKDAY: Record<number, WeekDayEnum> = {
   5: WeekDayEnum.FRI,
   6: WeekDayEnum.SAT,
 };
+
+export const WEEKDAY_TO_JS_DAY_INDEX: Record<WeekDayEnum, number> = {
+  [WeekDayEnum.SUN]: 0,
+  [WeekDayEnum.MON]: 1,
+  [WeekDayEnum.TUE]: 2,
+  [WeekDayEnum.WED]: 3,
+  [WeekDayEnum.THU]: 4,
+  [WeekDayEnum.FRI]: 5,
+  [WeekDayEnum.SAT]: 6,
+};

@@ -1,9 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
 import { RootState } from "../store";
-import { getCurrentWeekDay, getTodayHabitsUpdated } from "./utils";
+import {
+  getCurrentWeekDay,
+  getCurrentWeekDayIndex,
+  getTodayHabitsUpdated,
+} from "./utils";
 import { AVATAR_ACTIVATION_SPEECHES } from "../../constants/avatar.constants";
 import { PURGE } from "redux-persist";
+import {
+  JS_DAY_INDEX_TO_WEEKDAY,
+  WEEKDAY_TO_JS_DAY_INDEX,
+} from "../../constants/schedule.constants";
 
 type THabitRecord = Record<WeekDayEnum, number[]>;
 
@@ -144,27 +152,38 @@ export const scheduleSlice = createSlice({
       state[timeOfDay].notificationId = action.payload.notificationId;
     },
     setCurrentWeekDayAndUpdateTodayHabits: (state) => {
-      const currentWeekDay = getCurrentWeekDay();
+      const currentWeekDay = state.currentWeekDay;
+      const currentWeekDayIndex = WEEKDAY_TO_JS_DAY_INDEX[currentWeekDay];
+
+      const nextWeekDayIndex = getCurrentWeekDayIndex();
+      const nextWeekDay = JS_DAY_INDEX_TO_WEEKDAY[nextWeekDayIndex];
+
+      const isNewDay =
+        nextWeekDayIndex > currentWeekDayIndex ||
+        (nextWeekDayIndex === 0 && currentWeekDayIndex === 6);
 
       const todayMorningHabits = getTodayHabitsUpdated({
         state,
         timeOfDay: TimeOfDayEnum.MORNING,
-        weekDay: currentWeekDay,
+        weekDay: nextWeekDay,
+        isNewDay,
       });
 
       const todayAfternoonHabits = getTodayHabitsUpdated({
         state,
         timeOfDay: TimeOfDayEnum.AFTERNOON,
-        weekDay: currentWeekDay,
+        weekDay: nextWeekDay,
+        isNewDay,
       });
 
       const todayEveningHabits = getTodayHabitsUpdated({
         state,
         timeOfDay: TimeOfDayEnum.EVENING,
-        weekDay: currentWeekDay,
+        weekDay: nextWeekDay,
+        isNewDay,
       });
 
-      state.currentWeekDay = currentWeekDay;
+      state.currentWeekDay = nextWeekDay;
       state.today.morning = todayMorningHabits;
       state.today.afternoon = todayAfternoonHabits;
       state.today.evening = todayEveningHabits;

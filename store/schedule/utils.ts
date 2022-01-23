@@ -6,10 +6,12 @@ export const getTodayHabitsUpdated = ({
   state,
   timeOfDay,
   weekDay,
+  isNewDay,
 }: {
   state: IScheduleState;
   timeOfDay: TimeOfDayEnum;
   weekDay: WeekDayEnum;
+  isNewDay: boolean;
 }) => {
   const todayStateUpdated: TTodayRecord = {};
   const todayCurrentState = state.today[timeOfDay];
@@ -17,7 +19,9 @@ export const getTodayHabitsUpdated = ({
 
   habitIdsAdded.forEach((habitId) => {
     if (habitId in todayCurrentState) {
-      todayStateUpdated[habitId] = todayCurrentState[habitId];
+      todayStateUpdated[habitId] = isNewDay
+        ? false
+        : todayCurrentState[habitId];
     } else {
       todayStateUpdated[habitId] = false;
     }
@@ -26,8 +30,12 @@ export const getTodayHabitsUpdated = ({
   return todayStateUpdated;
 };
 
-export const getCurrentWeekDay = () => {
+export const getCurrentWeekDayIndex = () => {
   const currentDate = new Date();
-  const currentWeekDayIndex = currentDate.getDay();
+  return currentDate.getDay();
+};
+
+export const getCurrentWeekDay = () => {
+  const currentWeekDayIndex = getCurrentWeekDayIndex();
   return JS_DAY_INDEX_TO_WEEKDAY[currentWeekDayIndex];
 };
