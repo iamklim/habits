@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "habits-2",
-    "slug": "habits-2",
+    "name": "habit-chip",
+    "slug": "habit-chip",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,7 +17,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.iamklim.habit-chip.ios"
     },
     "android": {
       "adaptiveIcon": {
