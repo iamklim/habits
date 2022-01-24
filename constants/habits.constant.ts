@@ -52,10 +52,10 @@ export const HABITS: IHabit[] = [
   },
   {
     id: 8,
-    name: "Yoga",
-    icon: "yoga",
+    name: "Gym Workout",
+    icon: "dumbbell",
     description:
-      "Slow movements and deep breathing increase blood flow and warm up muscles, while holding a pose can build strength. Yoga relaxes you, to help you sleep better.",
+      "The U.S. Department of Health and Human Services recommends that adults get a minimum of 150 minutes a week of moderate-intensity aerobic activity. Gym training increases lean muscle mass and helps you manage your weight.",
   },
   {
     id: 9,
@@ -91,5 +91,19 @@ export const HABITS: IHabit[] = [
     icon: "account-heart",
     description:
       "Notice good things, look for them, appreciate them. Savor, absorb, and really pay attention to those good things. Express your gratitude to yourself, write it down, or thank someone.",
+  },
+  {
+    id: 14,
+    name: "Gym Workout",
+    icon: "dumbbell",
+    description:
+      "The U.S. Department of Health and Human Services recommends that adults get a minimum of 150 minutes a week of moderate-intensity aerobic activity. Gym trainings increase lean muscle mass and help you manage your weight",
+  },
+  {
+    id: 15,
+    name: "Yoga",
+    icon: "yoga",
+    description:
+      "Slow movements and deep breathing increase blood flow and warm up muscles, while holding a pose can build strength. Yoga relaxes you, to help you sleep better.",
   },
 ];
