@@ -93,13 +93,6 @@ export const HABITS: IHabit[] = [
       "Notice good things, look for them, appreciate them. Savor, absorb, and really pay attention to those good things. Express your gratitude to yourself, write it down, or thank someone.",
   },
   {
-    id: 14,
-    name: "Gym Workout",
-    icon: "dumbbell",
-    description:
-      "The U.S. Department of Health and Human Services recommends that adults get a minimum of 150 minutes a week of moderate-intensity aerobic activity. Gym trainings increase lean muscle mass and help you manage your weight",
-  },
-  {
     id: 15,
     name: "Yoga",
     icon: "yoga",
