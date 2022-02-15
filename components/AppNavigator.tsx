@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
   NavigationContainer,
+  NavigationContainerRefWithCurrent,
   NavigationHelpers,
   ParamListBase,
   TabNavigationState,
+  useNavigationContainerRef,
 } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
@@ -27,6 +29,7 @@ import {
   TStackNavigatorParams,
 } from "../types/types";
 import { SafeAreaView } from "react-native";
+import * as Analytics from "expo-firebase-analytics";
 
 const Stack = createStackNavigator<TStackNavigatorParams>();
 const Tab = createBottomTabNavigator<TBottomTabNavigatorParams>();
@@ -77,24 +80,50 @@ const Habits = () => (
   </Stack.Navigator>
 );
 
-export const AppNavigator = () => (
-  <NavigationContainer>
-    <Tab.Navigator
-      screenOptions={{ headerShown: false }}
-      tabBar={(props) => <BottomTabBar {...props} />}
+export const AppNavigator = () => {
+  const navigationRef =
+    useNavigationContainerRef<
+      NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>
+    >();
+  const routeNameRef = useRef<string>();
+
+  return (
+    <NavigationContainer
+      ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef?.getCurrentRoute()?.name;
+      }}
+      onStateChange={async () => {
+        const previousRouteName = routeNameRef.current;
+        const currentRouteName = navigationRef?.getCurrentRoute()?.name;
+
+        if (previousRouteName !== currentRouteName) {
+          await Analytics.logEvent("screen_view", {
+            screen_name: currentRouteName,
+          });
+        }
+
+        // Save the current route name for later comparison
+        routeNameRef.current = currentRouteName;
+      }}
     >
-      <Tab.Screen
-        name={BottomTabNavigatorScreensEnum.TODAY}
-        component={TodayScreen}
-      />
-      <Tab.Screen
-        name={BottomTabNavigatorScreensEnum.HABITS}
-        component={Habits}
-      />
-      <Tab.Screen
-        name={BottomTabNavigatorScreensEnum.RITUALS}
-        component={RitualsScreen}
-      />
-    </Tab.Navigator>
-  </NavigationContainer>
-);
+      <Tab.Navigator
+        screenOptions={{ headerShown: false }}
+        tabBar={(props) => <BottomTabBar {...props} />}
+      >
+        <Tab.Screen
+          name={BottomTabNavigatorScreensEnum.TODAY}
+          component={TodayScreen}
+        />
+        <Tab.Screen
+          name={BottomTabNavigatorScreensEnum.HABITS}
+          component={Habits}
+        />
+        <Tab.Screen
+          name={BottomTabNavigatorScreensEnum.RITUALS}
+          component={RitualsScreen}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+};

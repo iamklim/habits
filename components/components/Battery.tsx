@@ -3,6 +3,7 @@ import LottieView from "lottie-react-native";
 import BatteryAnimation from "../../assets/animations/battery.json";
 import { useAppSelector } from "../../hooks/redux-hooks";
 import { todayHabitsProgressSelector } from "../../store/schedule/scheduleSlice";
+import * as Analytics from "expo-firebase-analytics";
 
 const ANIMATION_START_FRAME = 116;
 const ANIMATION_END_FRAME = 93;
@@ -25,7 +26,15 @@ export const Battery = () => {
     }
   }, []);
 
+  const sendAnalytics = async () => {
+    await Analytics.logEvent("today/progress_change", {
+      todayHabitsProgress,
+    });
+  };
+
   useEffect(() => {
+    sendAnalytics();
+
     const shouldBePlayedFrames = Math.round(
       (todayHabitsProgress * ANIMATION_LENGTH) / 100
     );

@@ -9,6 +9,7 @@ import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
 import { SafeAreaView, ScrollView, TouchableOpacity, View } from "react-native";
 import RitualInfo from "../components/RitualInfo";
 import { WEEK_DAYS } from "../../constants/schedule.constants";
+import * as Analytics from "expo-firebase-analytics";
 
 const themedStyles = StyleService.create({
   layout: {
@@ -108,7 +109,12 @@ const RitualsScreen = () => {
 
   const [currentWeekDay, setCurrentWeekDay] = useState(WeekDayEnum.MON);
 
-  const onPress = ({ weekDay }: { weekDay: WeekDayEnum }) => {
+  const onPress = async ({ weekDay }: { weekDay: WeekDayEnum }) => {
+    await Analytics.logEvent(`rituals/weekday_press`, {
+      previousWeekday: currentWeekDay,
+      weekDay,
+    });
+
     setCurrentWeekDay(weekDay);
   };
 

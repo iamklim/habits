@@ -8,6 +8,7 @@ import {
   removeCurrentSpeech,
 } from "../../store/schedule/scheduleSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
+import * as Analytics from "expo-firebase-analytics";
 
 const themedStyles = StyleService.create({
   container: {
@@ -57,7 +58,9 @@ export const SpeechBubble = () => {
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const transformAnim = useRef(new Animated.Value(10)).current;
 
-  const showBubble = () => {
+  const showBubble = async () => {
+    await Analytics.logEvent("today/show_bubble", { speeches });
+
     Animated.timing(opacityAnim, {
       toValue: 1,
       useNativeDriver: true,
@@ -71,7 +74,9 @@ export const SpeechBubble = () => {
     }).start();
   };
 
-  const hideBubble = () => {
+  const hideBubble = async () => {
+    await Analytics.logEvent("today/hide_bubble", { speeches });
+
     Animated.timing(opacityAnim, {
       toValue: 0,
       useNativeDriver: true,
@@ -85,7 +90,9 @@ export const SpeechBubble = () => {
     }).start();
   };
 
-  const handlePress = () => {
+  const handlePress = async () => {
+    await Analytics.logEvent("today/bubble_press", { speeches });
+
     if (speeches.length === 1) {
       hideBubble();
 

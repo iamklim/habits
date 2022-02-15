@@ -18,7 +18,8 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.iamklim.habit-chip.ios"
+      "bundleIdentifier": "com.iamklim.habit-chip.ios",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {

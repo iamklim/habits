@@ -10,6 +10,7 @@ import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 import { BellOffIcon } from "./Icons";
 import { WEEK_DAYS } from "../../constants/schedule.constants";
+import * as Analytics from "expo-firebase-analytics";
 
 export const themedStyles = StyleService.create({
   container: {
@@ -113,11 +114,13 @@ export const WeekDayButton = ({
 interface IHabitScheduleSwitcherProps {
   timeOfDay: TimeOfDayEnum;
   habitId: number;
+  habitName: string;
 }
 
 const HabitScheduleSwitcher = ({
   timeOfDay,
   habitId,
+  habitName,
 }: IHabitScheduleSwitcherProps) => {
   const styles = useStyleSheet(themedStyles);
   const dispatch = useAppDispatch();
@@ -133,7 +136,13 @@ const HabitScheduleSwitcher = ({
     weekdaysWithHabitSelector({ state, timeOfDay, habitId })
   );
 
-  const onPress = ({ weekDay }: { weekDay: WeekDayEnum }) => {
+  const onPress = async ({ weekDay }: { weekDay: WeekDayEnum }) => {
+    await Analytics.logEvent("habits/info/weekday_in_schedule_toggle", {
+      habitId,
+      habitName,
+      timeOfDay,
+      weekDay,
+    });
     dispatch(toggleHabitInWeekDay({ id: habitId, timeOfDay, weekDay }));
   };
 

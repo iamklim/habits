@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>483313455234-30cahbvm11mogil03l6bd90tiv6pniir.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.483313455234-30cahbvm11mogil03l6bd90tiv6pniir</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBRhBlKrvC7Yp1NBSnadxwFCXaWY8mgKnU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>483313455234</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.iamklim.habit-chip.ios</string>
+	<key>PROJECT_ID</key>
+	<string>habit-chip</string>
+	<key>STORAGE_BUCKET</key>
+	<string>habit-chip.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:483313455234:ios:3daaeb1e2902aa7f3fe49b</string>
+</dict>
+</plist>

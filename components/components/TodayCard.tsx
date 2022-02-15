@@ -6,7 +6,7 @@ import {
   useStyleSheet,
 } from "@ui-kitten/components";
 import { View } from "react-native";
-import { TimeOfDayEnum } from "../../types/types";
+import { TimeOfDayEnum, WeekDayEnum } from "../../types/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 import {
   currentWeekDaySelector,
@@ -16,6 +16,7 @@ import {
 } from "../../store/schedule/scheduleSlice";
 import { HABITS } from "../../constants/habits.constant";
 import RitualEmptyTag from "./RitualEmptyTag";
+import * as Analytics from "expo-firebase-analytics";
 
 const themedStyles = StyleService.create({
   container: {
@@ -55,9 +56,14 @@ const themedStyles = StyleService.create({
 interface ITodayCardCheckBoxProps {
   habitId: number;
   timeOfDay: TimeOfDayEnum;
+  currentWeekDay: WeekDayEnum;
 }
 
-const HabitCheck = ({ habitId, timeOfDay }: ITodayCardCheckBoxProps) => {
+const HabitCheck = ({
+  habitId,
+  timeOfDay,
+  currentWeekDay,
+}: ITodayCardCheckBoxProps) => {
   const styles = useStyleSheet(themedStyles);
   const dispatch = useAppDispatch();
 
@@ -67,7 +73,14 @@ const HabitCheck = ({ habitId, timeOfDay }: ITodayCardCheckBoxProps) => {
 
   const currentHabit = HABITS.find((habit) => habit.id === habitId);
 
-  const handleChange = ({ nextChecked }: { nextChecked: boolean }) => {
+  const handleChange = async ({ nextChecked }: { nextChecked: boolean }) => {
+    await Analytics.logEvent("today/update_habit_status", {
+      weekDay: currentWeekDay,
+      timeOfDay,
+      habitId,
+      habitStatus: nextChecked,
+    });
+
     dispatch(
       updateTodayHabitStatus({ timeOfDay, habitId, habitStatus: nextChecked })
     );
@@ -129,7 +142,11 @@ const TodayCard = ({ timeOfDay }: ITodayCardProps) => {
                   : null
               }
             >
-              <HabitCheck habitId={habitId} timeOfDay={timeOfDay} />
+              <HabitCheck
+                habitId={habitId}
+                timeOfDay={timeOfDay}
+                currentWeekDay={currentWeekDay}
+              />
             </View>
           );
         })

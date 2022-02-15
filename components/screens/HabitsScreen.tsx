@@ -22,6 +22,7 @@ import {
 } from "../../types/types";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
 import Tag from "../components/Tag";
+import * as Analytics from "expo-firebase-analytics";
 
 const themedStyles = StyleService.create({
   layout: {
@@ -71,16 +72,38 @@ const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
   const styles = useStyleSheet(themedStyles);
   const navigation = useNavigation();
   const isHabitsAvailable = Boolean(habits.length);
+  const analyticsLocation = isAddedHabits ? "habits/my" : "habits/all";
 
-  const onHabitAdd = ({ id }: { id: number }) => {
+  const onHabitAdd = async ({ id }: { id: number }) => {
+    const currentHabit = HABITS.find((habit) => habit.id === id);
+
+    await Analytics.logEvent(`${analyticsLocation}/habit_add`, {
+      habitId: id,
+      habitName: currentHabit?.name,
+    });
+
     dispatch(addHabit({ id }));
   };
 
-  const onHabitRemove = ({ id }: { id: number }) => {
+  const onHabitRemove = async ({ id }: { id: number }) => {
+    const currentHabit = HABITS.find((habit) => habit.id === id);
+
+    await Analytics.logEvent(`${analyticsLocation}/habit_remove`, {
+      habitId: id,
+      habitName: currentHabit?.name,
+    });
+
     dispatch(removeHabit({ id }));
   };
 
-  const onHabitOpen = ({ id }: { id: number }) => {
+  const onHabitOpen = async ({ id }: { id: number }) => {
+    const currentHabit = HABITS.find((habit) => habit.id === id);
+
+    await Analytics.logEvent(`${analyticsLocation}/habit_open`, {
+      habitId: id,
+      habitName: currentHabit?.name,
+    });
+
     // @ts-ignore
     navigation.navigate(BottomTabNavigatorScreensEnum.HABITS, {
       screen: StackNavigatorScreensEnum.HABIT_INFO,
@@ -88,7 +111,9 @@ const HabitsList = ({ habits, isAddedHabits = false }: IHabitsListProps) => {
     });
   };
 
-  const onTagPress = () => {
+  const onTagPress = async () => {
+    await Analytics.logEvent(`${analyticsLocation}/empty_tag_press`);
+
     // @ts-ignore
     navigation.navigate(BottomTabNavigatorScreensEnum.HABITS, {
       screen: StackNavigatorScreensEnum.HABITS_LIST,
@@ -139,6 +164,7 @@ const HabitsScreen = () => {
 
   const isHabitsTab = tab === HabitsScreenTabEnum.HABITS;
   const isMyHabitsTab = tab === HabitsScreenTabEnum.MY_HABITS;
+  const analyticsLocation = isMyHabitsTab ? "habits/my" : "habits/all";
 
   const habitsAddedToSchedule = habitsAdded.map(
     (habitId) => HABITS.find((habit) => habit.id === habitId) as IHabit
@@ -148,13 +174,17 @@ const HabitsScreen = () => {
     ({ id }) => !habitsAdded.includes(id)
   );
 
-  const onHabitsPress = () => {
+  const onHabitsPress = async () => {
+    await Analytics.logEvent(`${analyticsLocation}/all_habits_press`);
+
     navigation.setParams({
       tab: HabitsScreenTabEnum.HABITS,
     });
   };
 
-  const onMyHabitsPress = () => {
+  const onMyHabitsPress = async () => {
+    await Analytics.logEvent(`${analyticsLocation}/my_habits_press`);
+
     navigation.setParams({
       tab: HabitsScreenTabEnum.MY_HABITS,
     });

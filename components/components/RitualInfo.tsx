@@ -18,6 +18,7 @@ import { TIME_OF_DAY_TO_DEFAULT_NOTIFICATION_HOUR } from "../../constants/schedu
 import RitualHabit from "./RitualHabit";
 import RitualEmptyTag from "./RitualEmptyTag";
 import * as Notifications from "expo-notifications";
+import * as Analytics from "expo-firebase-analytics";
 
 const themedStyles = StyleService.create({
   ritualTitle: {
@@ -126,7 +127,13 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
   const timeOfDayCamelCased =
     timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1).toLowerCase();
 
-  const onNotificationChange = (event: Event, date?: Date) => {
+  const onNotificationChange = async (event: Event, date?: Date) => {
+    await Analytics.logEvent("rituals/notification_change", {
+      weekDay,
+      timeOfDay,
+      notificationTime: date?.toString() || "",
+    });
+
     dispatch(
       setNotificationTime({
         timeOfDay,
@@ -136,14 +143,27 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
   };
 
   const onSetDefaultNotification = async () => {
+    await Analytics.logEvent("rituals/notification_permission_request");
+
     // We need to ask for Notification permissions for ios devices
     const { status } = await Notifications.requestPermissionsAsync();
     if (status === "granted") {
+      await Analytics.logEvent("rituals/notification_permission_granted", {
+        weekDay,
+        timeOfDay,
+      });
+
       dispatch(setIsNotificationsGranted(true));
 
       const defaultDate = new Date();
       defaultDate.setHours(TIME_OF_DAY_TO_DEFAULT_NOTIFICATION_HOUR[timeOfDay]);
       defaultDate.setMinutes(0);
+
+      await Analytics.logEvent("rituals/notification_default_set", {
+        weekDay,
+        timeOfDay,
+        notificationTime: defaultDate.toString(),
+      });
 
       dispatch(
         setNotificationTime({
@@ -152,11 +172,20 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
         })
       );
     } else {
+      await Analytics.logEvent("rituals/notification_permission_denied", {
+        weekDay,
+        timeOfDay,
+      });
       dispatch(setIsNotificationsGranted(false));
     }
   };
 
   const onRemoveNotification = async () => {
+    await Analytics.logEvent("rituals/notification_remove", {
+      weekDay,
+      timeOfDay,
+    });
+
     await Notifications.cancelScheduledNotificationAsync(currentNotificationId);
 
     dispatch(
@@ -167,7 +196,7 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
     );
   };
 
-  const scheduleNotificationAdUpdateId = async (notificationTime: string) => {
+  const scheduleNotificationAndUpdateId = async (notificationTime: string) => {
     await Notifications.cancelScheduledNotificationAsync(currentNotificationId);
 
     const date = new Date(notificationTime);
@@ -193,6 +222,12 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
       schedulingOptions
     );
 
+    await Analytics.logEvent("rituals/notification_schedule", {
+      weekDay,
+      timeOfDay,
+      notificationTime,
+    });
+
     dispatch(
       setNotificationId({
         timeOfDay,
@@ -203,7 +238,7 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
 
   useEffect(() => {
     if (notificationTime) {
-      scheduleNotificationAdUpdateId(notificationTime);
+      scheduleNotificationAndUpdateId(notificationTime);
     }
   }, [notificationTime]);
 
@@ -236,7 +271,12 @@ const RitualInfo = ({ timeOfDay, weekDay }: IRitualInfoProps) => {
             <Text style={styles.habitsAddedText}>Habits added: </Text>
             <View style={styles.habitsAdded}>
               {habitsByTimeOfDayAndWeekDay.map((habitId) => (
-                <RitualHabit key={habitId} habitId={habitId} />
+                <RitualHabit
+                  key={habitId}
+                  habitId={habitId}
+                  timeOfDay={timeOfDay}
+                  weekDay={weekDay}
+                />
               ))}
             </View>
           </>

@@ -78,6 +78,7 @@ const HabitInfoScreen = () => {
                 <HabitScheduleSwitcher
                   timeOfDay={TimeOfDayEnum.MORNING}
                   habitId={habitId}
+                  habitName={currentHabit.name}
                 />
               </View>
               <Text style={styles.ritualTitle}>Afternoon ritual</Text>
@@ -85,6 +86,7 @@ const HabitInfoScreen = () => {
                 <HabitScheduleSwitcher
                   timeOfDay={TimeOfDayEnum.AFTERNOON}
                   habitId={habitId}
+                  habitName={currentHabit.name}
                 />
               </View>
               <Text style={styles.ritualTitle}>Evening ritual</Text>
@@ -92,6 +94,7 @@ const HabitInfoScreen = () => {
                 <HabitScheduleSwitcher
                   timeOfDay={TimeOfDayEnum.EVENING}
                   habitId={habitId}
+                  habitName={currentHabit.name}
                 />
               </View>
             </View>

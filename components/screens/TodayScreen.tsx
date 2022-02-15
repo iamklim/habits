@@ -20,6 +20,7 @@ import Avatar from "../components/Avatar";
 import TapAnimation from "../components/TapAnimation";
 import SpeechBubble from "../components/SpeechBubble";
 import TapAnimationBlack from "../../assets/animations/tap-gesture-black.json";
+import * as Analytics from "expo-firebase-analytics";
 
 const themedStyles = StyleService.create({
   layout: {
@@ -74,8 +75,12 @@ const TodayScreen = () => {
     avatarIsActivatedSelector({ state })
   );
 
-  const handleAvatarPress = () => {
+  const handleAvatarPress = async () => {
+    await Analytics.logEvent(`today/avatar_press`);
+
     if (!avatarIsActivated) {
+      await Analytics.logEvent(`today/avatar_activate`);
+
       dispatch(activateAvatar());
     }
   };

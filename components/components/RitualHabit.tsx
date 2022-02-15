@@ -4,19 +4,32 @@ import { useNavigation } from "@react-navigation/native";
 import {
   BottomTabNavigatorScreensEnum,
   StackNavigatorScreensEnum,
+  TimeOfDayEnum,
+  WeekDayEnum,
 } from "../../types/types";
 import Tag from "./Tag";
+import * as Analytics from "expo-firebase-analytics";
 
 interface IRitualHabitProps {
   habitId: number;
+  timeOfDay: TimeOfDayEnum;
+  weekDay: WeekDayEnum;
 }
 
-const RitualHabit = ({ habitId }: IRitualHabitProps) => {
+const RitualHabit = ({ habitId, timeOfDay, weekDay }: IRitualHabitProps) => {
   const navigation = useNavigation();
 
   const currentHabit = HABITS.find((habit) => habit.id === habitId);
 
-  const onPress = () => {
+  const onPress = async () => {
+    await Analytics.logEvent("rituals/habit_press", {
+      weekDay,
+      timeOfDay,
+      habitId: currentHabit?.id,
+      habitName: currentHabit?.name,
+      tagText: currentHabit?.name,
+    });
+
     // @ts-ignore
     navigation.navigate(BottomTabNavigatorScreensEnum.HABITS, {
       screen: StackNavigatorScreensEnum.HABIT_INFO,

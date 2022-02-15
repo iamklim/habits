@@ -9,6 +9,7 @@ import {
 } from "../../types/types";
 import Tag from "./Tag";
 import { WEEK_DAYS_SHORT_TO_FULL } from "../../constants/schedule.constants";
+import * as Analytics from "expo-firebase-analytics";
 
 interface IRitualEmptyTagProps {
   timeOfDay: TimeOfDayEnum;
@@ -20,7 +21,11 @@ const RitualEmptyTag = ({ timeOfDay, weekDay }: IRitualEmptyTagProps) => {
 
   const tagText = `Add habit for ${WEEK_DAYS_SHORT_TO_FULL[weekDay]} ${timeOfDay}`;
 
-  const onPress = () => {
+  const onPress = async () => {
+    await Analytics.logEvent("rituals/empty_tag_press", {
+      weekDay,
+      timeOfDay,
+    });
     // @ts-ignore
     navigation.navigate(BottomTabNavigatorScreensEnum.HABITS, {
       screen: StackNavigatorScreensEnum.HABITS_LIST,
